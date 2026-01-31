@@ -1,0 +1,579 @@
+openapi: 3.0.3
+info:
+  title: Multi-School Platform - Public Website API
+  description: |
+    Public-facing endpoints for school websites. No authentication required.
+    Served via subdomain routing (e.g., schoolA.domain.com).
+    All data filtered by subdomain-resolved school_id.
+  version: 1.0.0
+  contact:
+    name: Platform Support
+    email: support@example.com
+
+servers:
+  - url: https://{subdomain}.example.com/api/v1
+    description: School-specific subdomain
+    variables:
+      subdomain:
+        default: demo
+        description: School subdomain
+  - url: http://localhost:3000/api/v1
+    description: Development API
+
+tags:
+  - name: School
+    description: School information and configuration
+  - name: Faculty
+    description: Public faculty directory
+  - name: Results
+    description: Public student results
+  - name: Notices
+    description: Public notices and announcements
+  - name: Gallery
+    description: Public photo gallery
+  - name: Principal
+    description: Principal's message
+
+paths:
+  /public/school:
+    get:
+      tags:
+        - School
+      summary: Get school information
+      description: |
+        Retrieve school configuration and branding for current subdomain.
+        Includes logo, colors, contact information, principal details.
+      operationId: getSchoolInfo
+      responses:
+        '200':
+          description: School information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolInfo'
+              example:
+                school_id: 550e8400-e29b-41d4-a716-446655440010
+                school_name: Springfield High School
+                subdomain: springfield
+                logo_url: /data/schools/550e8400-e29b-41d4-a716-446655440010/config/logo.png
+                primary_color: '#0A3D62'
+                secondary_color: '#EAF2F8'
+                contact_email: admin@springfieldhigh.edu
+                contact_phone: '+1-555-0100'
+                address: 123 Education St, Springfield, IL 62701
+        '404':
+          $ref: '#/components/responses/SchoolNotFound'
+
+  /public/faculty:
+    get:
+      tags:
+        - Faculty
+      summary: List public faculty
+      description: |
+        Retrieve all visible faculty members for current subdomain's school.
+        Only faculty with is_visible=true are returned.
+      operationId: getPublicFaculty
+      responses:
+        '200':
+          description: Faculty list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  faculty:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicFaculty'
+        '404':
+          $ref: '#/components/responses/SchoolNotFound'
+
+  /public/results:
+    get:
+      tags:
+        - Results
+      summary: List available results
+      description: |
+        Retrieve list of published results (year/class combinations).
+        Does not include actual student data - use specific endpoint.
+      operationId: listPublicResults
+      responses:
+        '200':
+          description: Results list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ResultSummary'
+        '404':
+          $ref: '#/components/responses/SchoolNotFound'
+
+  /public/results/{academic_year}/{class_level}:
+    get:
+      tags:
+        - Results
+      summary: Get specific result
+      description: |
+        Retrieve student results for specific academic year and class.
+        Only published results are returned.
+      operationId: getPublicResult
+      parameters:
+        - name: academic_year
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}$'
+          example: '2024-25'
+        - name: class_level
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'Class 10'
+      responses:
+        '200':
+          description: Result retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicResult'
+        '404':
+          description: Result not found or not published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Result not found for Class 10, 2024-25
+
+  /public/notices:
+    get:
+      tags:
+        - Notices
+      summary: List active notices
+      description: |
+        Retrieve active published notices for current subdomain's school.
+        Automatically filters expired notices (expiry_date < now).
+        Sorted by priority (desc) then published_date (desc).
+      operationId: getPublicNotices
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category
+          example: academic
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of notices to return
+      responses:
+        '200':
+          description: Notices retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicNotice'
+        '404':
+          $ref: '#/components/responses/SchoolNotFound'
+
+  /public/gallery:
+    get:
+      tags:
+        - Gallery
+      summary: List gallery images
+      description: |
+        Retrieve visible gallery images for current subdomain's school.
+        Supports filtering by category. Images lazy-loaded on frontend.
+      operationId: getPublicGallery
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category
+          example: sports
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+          description: Maximum number of images to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: Gallery images retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  images:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicGalleryImage'
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 150
+                      limit:
+                        type: integer
+                        example: 50
+                      offset:
+                        type: integer
+                        example: 0
+                      has_more:
+                        type: boolean
+                        example: true
+        '404':
+          $ref: '#/components/responses/SchoolNotFound'
+
+  /public/principal:
+    get:
+      tags:
+        - Principal
+      summary: Get principal profile
+      description: |
+        Retrieve principal's message and profile for current subdomain's school.
+        Displayed prominently on homepage.
+      operationId: getPrincipalProfile
+      responses:
+        '200':
+          description: Principal profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPrincipalProfile'
+        '404':
+          description: Principal profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Principal profile not configured
+
+components:
+  schemas:
+    SchoolInfo:
+      type: object
+      required:
+        - school_id
+        - school_name
+        - subdomain
+        - primary_color
+        - secondary_color
+        - contact_email
+      properties:
+        school_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440010
+        school_name:
+          type: string
+          example: Springfield High School
+        subdomain:
+          type: string
+          example: springfield
+        logo_url:
+          type: string
+          nullable: true
+          example: /data/schools/550e8400-e29b-41d4-a716-446655440010/config/logo.png
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#0A3D62'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#EAF2F8'
+        contact_email:
+          type: string
+          format: email
+          example: admin@springfieldhigh.edu
+        contact_phone:
+          type: string
+          nullable: true
+          example: '+1-555-0100'
+        address:
+          type: string
+          nullable: true
+          example: 123 Education St, Springfield, IL 62701
+
+    PublicFaculty:
+      type: object
+      required:
+        - faculty_id
+        - full_name
+        - designation
+        - qualification
+        - experience_years
+      properties:
+        faculty_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+          example: Dr. Jane Smith
+        designation:
+          type: string
+          example: Principal
+        qualification:
+          type: string
+          example: Ph.D. in Education
+        experience_years:
+          type: integer
+          example: 15
+        subject:
+          type: string
+          nullable: true
+          example: Mathematics
+        photo_url:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        display_order:
+          type: integer
+
+    ResultSummary:
+      type: object
+      required:
+        - result_id
+        - academic_year
+        - class_level
+        - exam_type
+        - published_date
+      properties:
+        result_id:
+          type: string
+          format: uuid
+        academic_year:
+          type: string
+          example: '2024-25'
+        class_level:
+          type: string
+          example: 'Class 10'
+        exam_type:
+          type: string
+          example: Annual
+        published_date:
+          type: string
+          format: date-time
+
+    PublicResult:
+      type: object
+      required:
+        - result_id
+        - academic_year
+        - class_level
+        - exam_type
+        - result_data
+        - published_date
+      properties:
+        result_id:
+          type: string
+          format: uuid
+        academic_year:
+          type: string
+          example: '2024-25'
+        class_level:
+          type: string
+          example: 'Class 10'
+        exam_type:
+          type: string
+          example: Annual
+        result_data:
+          type: object
+          properties:
+            students:
+              type: array
+              items:
+                type: object
+                properties:
+                  roll_number:
+                    type: string
+                  student_name:
+                    type: string
+                  total_marks:
+                    type: number
+                  percentage:
+                    type: number
+                    format: float
+                  grade:
+                    type: string
+                  rank:
+                    type: integer
+                  subjects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subject_name:
+                          type: string
+                        marks_obtained:
+                          type: number
+                        max_marks:
+                          type: number
+                        grade:
+                          type: string
+            statistics:
+              type: object
+              properties:
+                total_students:
+                  type: integer
+                pass_percentage:
+                  type: number
+                  format: float
+                highest_marks:
+                  type: number
+                average_percentage:
+                  type: number
+                  format: float
+        published_date:
+          type: string
+          format: date-time
+
+    PublicNotice:
+      type: object
+      required:
+        - notice_id
+        - title
+        - description
+        - priority_level
+        - published_date
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: School Reopening Date
+        description:
+          type: string
+          example: School will reopen on February 1, 2026
+        priority_level:
+          type: integer
+          minimum: 0
+          maximum: 5
+          example: 2
+        category:
+          type: string
+          example: general
+        published_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+          nullable: true
+        attachment_url:
+          type: string
+          nullable: true
+
+    PublicGalleryImage:
+      type: object
+      required:
+        - image_id
+        - category
+        - image_url
+      properties:
+        image_id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          example: sports
+        image_url:
+          type: string
+          example: /data/schools/.../gallery/sports/img123.jpg
+        thumbnail_url:
+          type: string
+          nullable: true
+          example: /data/schools/.../gallery/sports/thumb_img123.jpg
+        caption:
+          type: string
+          nullable: true
+          example: Annual Sports Day 2025
+        event_date:
+          type: string
+          format: date
+          nullable: true
+
+    PublicPrincipalProfile:
+      type: object
+      required:
+        - principal_name
+        - message_text
+      properties:
+        principal_name:
+          type: string
+          example: Dr. Robert Johnson
+        photo_url:
+          type: string
+          nullable: true
+        message_text:
+          type: string
+          example: Welcome to Springfield High School. We are committed to excellence...
+        qualification:
+          type: string
+          nullable: true
+          example: Ph.D. in Educational Leadership
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          example: Resource not found
+
+  responses:
+    SchoolNotFound:
+      description: School not found for subdomain
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: School not found. Please check the subdomain or contact support.

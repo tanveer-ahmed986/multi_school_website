@@ -1,0 +1,91 @@
+# Root-level .gitignore for Multi-School Website Platform
+
+# Environment variables & Secrets
+.env
+.env.local
+.env*.local
+*.pem
+*.key
+*.crt
+secrets/
+.secrets
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+backend/.venv/
+backend/venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node.js
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.yarn
+.next/
+out/
+build/
+dist/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.sublime-*
+.history/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/
+postgres-data/
+
+# Docker
+docker-compose.override.yml
+
+# Temporary & Test files
+*.tmp
+*.temp
+.cache/
+temp_*.html
+NUL
+
+# Demo files (optional - uncomment to exclude)
+# demo*.html
+# admin-features-demo.html
+
+# Task output files
+.claude/
+tasks/*.output
+
+# Build artifacts
+*.pyc
+.tsbuildinfo

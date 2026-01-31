@@ -1,0 +1,460 @@
+openapi: 3.0.3
+info:
+  title: Multi-School Platform - Authentication API
+  description: |
+    Authentication endpoints for the multi-school website platform.
+    Supports JWT with refresh token rotation for secure, stateless authentication.
+  version: 1.0.0
+  contact:
+    name: Platform Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production API
+  - url: http://localhost:8000/v1
+    description: Development API
+
+tags:
+  - name: Authentication
+    description: User authentication and token management
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: |
+        Authenticate user with email and password. Returns access token (15 min)
+        and refresh token (7 days) via HTTP-only cookie.
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              super_admin:
+                summary: Super Admin login
+                value:
+                  email: admin@platform.com
+                  password: SecurePass123!
+              school_admin:
+                summary: School Admin login
+                value:
+                  email: admin@springfield.edu
+                  password: SchoolPass456!
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=abc123...; HttpOnly; Secure; SameSite=Strict; Max-Age=604800
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                super_admin:
+                  summary: Super Admin login response
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                    token_type: bearer
+                    expires_in: 900
+                    user:
+                      user_id: 550e8400-e29b-41d4-a716-446655440000
+                      email: admin@platform.com
+                      role: SUPER_ADMIN
+                      full_name: Platform Administrator
+                      schools: []
+                school_admin:
+                  summary: School Admin login response
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                    token_type: bearer
+                    expires_in: 900
+                    user:
+                      user_id: 550e8400-e29b-41d4-a716-446655440001
+                      email: admin@springfield.edu
+                      role: SCHOOL_ADMIN
+                      full_name: John Smith
+                      schools:
+                        - school_id: 550e8400-e29b-41d4-a716-446655440010
+                          school_name: Springfield High School
+                          subdomain: springfield
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: |
+        Exchange refresh token for new access token. Refresh token is rotated
+        (old token invalidated, new token issued). Requires refresh_token cookie.
+      operationId: refresh
+      parameters:
+        - name: Cookie
+          in: header
+          required: true
+          schema:
+            type: string
+            example: refresh_token=abc123...
+      responses:
+        '200':
+          description: Token refreshed successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=xyz789...; HttpOnly; Secure; SameSite=Strict; Max-Age=604800
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: |
+        Revoke refresh token and clear authentication cookies. Access token
+        remains valid until expiry (15 min) but refresh is blocked.
+      operationId: logout
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Cookie
+          in: header
+          required: true
+          schema:
+            type: string
+            example: refresh_token=abc123...
+      responses:
+        '200':
+          description: Logout successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: Logout successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user
+      description: |
+        Retrieve authenticated user information. Useful for verifying token
+        validity and fetching user profile.
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/select-school:
+    post:
+      tags:
+        - Authentication
+      summary: Select school context
+      description: |
+        For users with multi-school access (same email across schools), select
+        active school context. Returns new access token with updated school_id.
+      operationId: selectSchool
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - school_id
+              properties:
+                school_id:
+                  type: string
+                  format: uuid
+                  description: School to set as active context
+              example:
+                school_id: 550e8400-e29b-41d4-a716-446655440010
+      responses:
+        '200':
+          description: School context updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: User does not have access to this school
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token (15 min lifespan)
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          example: admin@springfield.edu
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+          example: SecurePass123!
+
+    LoginResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - user
+      properties:
+        access_token:
+          type: string
+          description: JWT access token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          enum: [bearer]
+          example: bearer
+        expires_in:
+          type: integer
+          description: Token expiry in seconds (900 = 15 min)
+          example: 900
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    RefreshResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: New JWT access token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          enum: [bearer]
+          example: bearer
+        expires_in:
+          type: integer
+          description: Token expiry in seconds (900 = 15 min)
+          example: 900
+
+    UserProfile:
+      type: object
+      required:
+        - user_id
+        - email
+        - role
+        - full_name
+        - schools
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440001
+        email:
+          type: string
+          format: email
+          example: admin@springfield.edu
+        role:
+          type: string
+          enum: [SUPER_ADMIN, SCHOOL_ADMIN, STAFF]
+          example: SCHOOL_ADMIN
+        full_name:
+          type: string
+          example: John Smith
+        schools:
+          type: array
+          description: Schools user has access to (empty for SUPER_ADMIN)
+          items:
+            $ref: '#/components/schemas/SchoolSummary'
+        active_school_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Currently selected school (null for SUPER_ADMIN)
+          example: 550e8400-e29b-41d4-a716-446655440010
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2026-01-31T10:30:00Z
+
+    SchoolSummary:
+      type: object
+      required:
+        - school_id
+        - school_name
+        - subdomain
+      properties:
+        school_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440010
+        school_name:
+          type: string
+          example: Springfield High School
+        subdomain:
+          type: string
+          example: springfield
+
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Operation successful
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          example: Invalid credentials
+
+    ValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: array
+          items:
+            type: object
+            required:
+              - loc
+              - msg
+              - type
+            properties:
+              loc:
+                type: array
+                items:
+                  type: string
+                example: ["body", "email"]
+              msg:
+                type: string
+                example: field required
+              type:
+                type: string
+                example: value_error.missing
+
+  responses:
+    Unauthorized:
+      description: Authentication failed or token invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalid_credentials:
+              summary: Invalid email/password
+              value:
+                detail: Invalid credentials
+            token_expired:
+              summary: Access token expired
+              value:
+                detail: Token has expired
+            token_invalid:
+              summary: Invalid token format
+              value:
+                detail: Invalid authentication token
+
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Invalid request parameters
+
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+          example:
+            detail:
+              - loc: ["body", "email"]
+                msg: invalid email format
+                type: value_error.email
+              - loc: ["body", "password"]
+                msg: ensure this value has at least 8 characters
+                type: value_error.any_str.min_length
+
+    RateLimitExceeded:
+      description: Too many requests
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds to wait before retry
+          example: 60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Rate limit exceeded. Try again in 60 seconds.

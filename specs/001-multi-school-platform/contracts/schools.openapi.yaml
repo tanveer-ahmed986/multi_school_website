@@ -1,0 +1,715 @@
+openapi: 3.0.3
+info:
+  title: Multi-School Platform - School Management API
+  description: |
+    School management endpoints for the multi-school website platform.
+    Super Admin only - creates and manages school tenants.
+  version: 1.0.0
+  contact:
+    name: Platform Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production API
+  - url: http://localhost:8000/v1
+    description: Development API
+
+tags:
+  - name: Schools
+    description: School tenant management (Super Admin only)
+
+security:
+  - bearerAuth: []
+
+paths:
+  /schools:
+    get:
+      tags:
+        - Schools
+      summary: List all schools
+      description: |
+        Retrieve paginated list of all schools in the platform.
+        Super Admin only.
+      operationId: listSchools
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by school name or subdomain
+          example: springfield
+      responses:
+        '200':
+          description: Schools retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags:
+        - Schools
+      summary: Create new school
+      description: |
+        Onboard new school tenant. Automatically generates school_id,
+        creates folder structure, and initializes default configuration.
+        Super Admin only.
+      operationId: createSchool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSchoolRequest'
+      responses:
+        '201':
+          description: School created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Subdomain already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Subdomain 'springfield' is already in use
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /schools/{school_id}:
+    get:
+      tags:
+        - Schools
+      summary: Get school by ID
+      description: |
+        Retrieve detailed school information by school_id.
+        Super Admin only.
+      operationId: getSchool
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+      responses:
+        '200':
+          description: School retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Schools
+      summary: Update school
+      description: |
+        Update school configuration (name, branding, contact info).
+        Super Admin only. Cannot change subdomain after creation.
+      operationId: updateSchool
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSchoolRequest'
+      responses:
+        '200':
+          description: School updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Schools
+      summary: Delete school
+      description: |
+        Permanently delete school tenant and all associated data.
+        DESTRUCTIVE OPERATION - requires confirmation parameter.
+        Super Admin only.
+      operationId: deleteSchool
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+        - name: confirm
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Must be 'DELETE' to confirm
+          example: DELETE
+      responses:
+        '200':
+          description: School deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: School deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /schools/{school_id}/stats:
+    get:
+      tags:
+        - Schools
+      summary: Get school statistics
+      description: |
+        Retrieve usage statistics for a school (storage, user count, content counts).
+        Super Admin only.
+      operationId: getSchoolStats
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /schools/{school_id}/admins:
+    get:
+      tags:
+        - Schools
+      summary: List school admins
+      description: |
+        Retrieve list of School Admin and Staff users for a school.
+        Super Admin only.
+      operationId: listSchoolAdmins
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+      responses:
+        '200':
+          description: Admins retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  admins:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags:
+        - Schools
+      summary: Create school admin
+      description: |
+        Create new School Admin or Staff user for a school.
+        Super Admin only.
+      operationId: createSchoolAdmin
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminRequest'
+      responses:
+        '201':
+          description: Admin created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Email already exists for this school
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    SchoolId:
+      name: school_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: 550e8400-e29b-41d4-a716-446655440010
+
+  schemas:
+    School:
+      type: object
+      required:
+        - school_id
+        - school_name
+        - subdomain
+        - contact_email
+        - is_active
+        - created_at
+      properties:
+        school_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440010
+        school_name:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Springfield High School
+        subdomain:
+          type: string
+          minLength: 3
+          maxLength: 100
+          pattern: '^[a-z0-9-]+$'
+          example: springfield
+        logo_url:
+          type: string
+          nullable: true
+          example: /data/schools/550e8400-e29b-41d4-a716-446655440010/config/logo.png
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#0A3D62'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#EAF2F8'
+        contact_email:
+          type: string
+          format: email
+          example: admin@springfieldhigh.edu
+        contact_phone:
+          type: string
+          nullable: true
+          example: '+1-555-0100'
+        address:
+          type: string
+          nullable: true
+          example: 123 Education St, Springfield, IL 62701
+        config_json:
+          type: object
+          additionalProperties: true
+          description: Additional custom configuration
+          example:
+            timezone: America/Chicago
+            academic_year_start: 08-01
+        is_active:
+          type: boolean
+          example: true
+        storage_used_bytes:
+          type: integer
+          format: int64
+          example: 524288000
+        storage_limit_bytes:
+          type: integer
+          format: int64
+          example: 10737418240
+        created_at:
+          type: string
+          format: date-time
+          example: 2026-01-15T10:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2026-01-30T14:30:00Z
+
+    CreateSchoolRequest:
+      type: object
+      required:
+        - school_name
+        - subdomain
+        - contact_email
+      properties:
+        school_name:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Springfield High School
+        subdomain:
+          type: string
+          minLength: 3
+          maxLength: 100
+          pattern: '^[a-z0-9-]+$'
+          description: Lowercase alphanumeric with hyphens
+          example: springfield
+        contact_email:
+          type: string
+          format: email
+          example: admin@springfieldhigh.edu
+        contact_phone:
+          type: string
+          nullable: true
+          example: '+1-555-0100'
+        address:
+          type: string
+          nullable: true
+          example: 123 Education St, Springfield, IL 62701
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          default: '#0A3D62'
+          example: '#0A3D62'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          default: '#EAF2F8'
+          example: '#EAF2F8'
+        storage_limit_bytes:
+          type: integer
+          format: int64
+          default: 10737418240
+          example: 10737418240
+
+    UpdateSchoolRequest:
+      type: object
+      properties:
+        school_name:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: Springfield High School
+        contact_email:
+          type: string
+          format: email
+          example: admin@springfieldhigh.edu
+        contact_phone:
+          type: string
+          nullable: true
+          example: '+1-555-0100'
+        address:
+          type: string
+          nullable: true
+          example: 123 Education St, Springfield, IL 62701
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#0A3D62'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+          example: '#EAF2F8'
+        is_active:
+          type: boolean
+          example: true
+        storage_limit_bytes:
+          type: integer
+          format: int64
+          example: 10737418240
+
+    SchoolListResponse:
+      type: object
+      required:
+        - schools
+        - pagination
+      properties:
+        schools:
+          type: array
+          items:
+            $ref: '#/components/schemas/School'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    SchoolStats:
+      type: object
+      required:
+        - school_id
+        - storage_used_bytes
+        - storage_limit_bytes
+        - user_count
+        - content_counts
+      properties:
+        school_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440010
+        storage_used_bytes:
+          type: integer
+          format: int64
+          example: 524288000
+        storage_limit_bytes:
+          type: integer
+          format: int64
+          example: 10737418240
+        storage_percentage:
+          type: number
+          format: float
+          example: 4.88
+        user_count:
+          type: object
+          properties:
+            school_admin:
+              type: integer
+              example: 2
+            staff:
+              type: integer
+              example: 5
+            total:
+              type: integer
+              example: 7
+        content_counts:
+          type: object
+          properties:
+            faculty:
+              type: integer
+              example: 25
+            results:
+              type: integer
+              example: 12
+            notices:
+              type: integer
+              example: 8
+            gallery_images:
+              type: integer
+              example: 150
+
+    User:
+      type: object
+      required:
+        - user_id
+        - email
+        - role
+        - full_name
+        - is_active
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440001
+        email:
+          type: string
+          format: email
+          example: admin@springfield.edu
+        role:
+          type: string
+          enum: [SUPER_ADMIN, SCHOOL_ADMIN, STAFF]
+          example: SCHOOL_ADMIN
+        full_name:
+          type: string
+          example: John Smith
+        is_active:
+          type: boolean
+          example: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2026-01-31T10:30:00Z
+        created_at:
+          type: string
+          format: date-time
+          example: 2026-01-15T10:00:00Z
+
+    CreateAdminRequest:
+      type: object
+      required:
+        - email
+        - password
+        - role
+        - full_name
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@springfield.edu
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+          example: SecurePass123!
+        role:
+          type: string
+          enum: [SCHOOL_ADMIN, STAFF]
+          example: SCHOOL_ADMIN
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: John Smith
+
+    Pagination:
+      type: object
+      required:
+        - page
+        - page_size
+        - total_items
+        - total_pages
+      properties:
+        page:
+          type: integer
+          example: 1
+        page_size:
+          type: integer
+          example: 20
+        total_items:
+          type: integer
+          example: 45
+        total_pages:
+          type: integer
+          example: 3
+
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Operation successful
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          example: Invalid request
+
+    ValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: array
+          items:
+            type: object
+            required:
+              - loc
+              - msg
+              - type
+            properties:
+              loc:
+                type: array
+                items:
+                  type: string
+              msg:
+                type: string
+              type:
+                type: string
+
+  responses:
+    Unauthorized:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Invalid authentication token
+
+    Forbidden:
+      description: Insufficient permissions (Super Admin required)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Super Admin access required
+
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Invalid request parameters
+
+    NotFound:
+      description: School not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: School not found
+
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo High School - Multi-School Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: #0A3D62;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0A3D62 0%, #1a5c8f 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            color: #0A3D62;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #0A3D62;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+        /* Notice Board */
+        .notice {
+            background: #f8f9fa;
+            border-left: 4px solid #0A3D62;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .notice h4 {
+            color: #0A3D62;
+            margin-bottom: 0.5rem;
+        }
+
+        .notice .date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .priority-high {
+            border-left-color: #dc3545;
+        }
+
+        .priority-medium {
+            border-left-color: #ffc107;
+        }
+
+        /* Principal Message */
+        .principal-message {
+            background: #EAF2F8;
+            padding: 2rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .principal-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #0A3D62;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+
+        .principal-content h3 {
+            color: #0A3D62;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-container p {
+            opacity: 0.8;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            background: #28a745;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-banner">
+        ✓ Backend API Running | <span id="api-status">Connected</span>
+    </div>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">🏫 Demo High School</div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#faculty">Faculty</a>
+                <a href="#results">Results</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#notices">Notices</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Welcome to Demo High School</h1>
+        <p>Committed to Excellence in Education</p>
+    </section>
+
+    <div class="container">
+        <!-- Principal's Message -->
+        <section class="section">
+            <h2>Principal's Message</h2>
+            <div class="principal-message">
+                <div class="principal-photo">👨‍🏫</div>
+                <div class="principal-content">
+                    <h3>Dr. Jane Smith - Principal</h3>
+                    <p id="principal-message">Loading message...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notices -->
+        <section class="section" id="notices">
+            <h2>Latest Notices</h2>
+            <div id="notices-list">
+                <div class="loading"></div> Loading notices...
+            </div>
+        </section>
+
+        <!-- Faculty -->
+        <section class="section" id="faculty">
+            <h2>Our Faculty</h2>
+            <div class="cards-grid" id="faculty-list">
+                <div class="loading"></div> Loading faculty...
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="section" id="results">
+            <h2>Examination Results</h2>
+            <div class="cards-grid" id="results-list">
+                <div class="loading"></div> Loading results...
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <p><strong>Demo High School</strong></p>
+            <p>123 Education Street, Learning City, ST 12345</p>
+            <p>Email: info@demoschool.com | Phone: (555) 123-4567</p>
+            <p style="margin-top: 1rem; opacity: 0.6;">
+                Powered by Multi-School Platform | Built with Claude Code
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        // Load Principal Message
+        fetch(`${API_URL}/public/principal`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('principal-message').textContent = data.message;
+            })
+            .catch(err => {
+                document.getElementById('principal-message').textContent =
+                    'Welcome to our school! We are committed to providing excellence in education.';
+            });
+
+        // Load Notices
+        fetch(`${API_URL}/public/notices`)
+            .then(res => res.json())
+            .then(notices => {
+                const noticesList = document.getElementById('notices-list');
+                noticesList.innerHTML = notices.map(notice => `
+                    <div class="notice priority-${notice.priority}">
+                        <h4>${notice.title}</h4>
+                        <p>${notice.content}</p>
+                        <div class="date">Published: ${new Date(notice.published_date).toLocaleDateString()}</div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('notices-list').innerHTML =
+                    '<p>Unable to load notices. Please try again later.</p>';
+            });
+
+        // Load Faculty
+        fetch(`${API_URL}/public/faculty`)
+            .then(res => res.json())
+            .then(faculty => {
+                const facultyList = document.getElementById('faculty-list');
+                facultyList.innerHTML = faculty.map(member => `
+                    <div class="card">
+                        <h3>${member.name}</h3>
+                        <p><strong>${member.designation}</strong></p>
+                        <p>Department: ${member.department}</p>
+                        <p>Email: ${member.email}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('faculty-list').innerHTML =
+                    '<p>Unable to load faculty. Please try again later.</p>';
+            });
+
+        // Load Results
+        fetch(`${API_URL}/public/results`)
+            .then(res => res.json())
+            .then(results => {
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = results.map(result => `
+                    <div class="card">
+                        <h3>${result.class_level}</h3>
+                        <p><strong>${result.exam_type}</strong></p>
+                        <p>Academic Year: ${result.academic_year}</p>
+                        <p style="color: #28a745;">✓ Published</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('results-list').innerHTML =
+                    '<p>Unable to load results. Please try again later.</p>';
+            });
+
+        // Check API Status
+        setInterval(() => {
+            fetch(`${API_URL}/health`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('api-status').innerHTML =
+                        `✓ Connected (v${data.version})`;
+                })
+                .catch(err => {
+                    document.getElementById('api-status').innerHTML =
+                        '✗ Disconnected';
+                });
+        }, 5000);
+    </script>
+</body>
+</html>

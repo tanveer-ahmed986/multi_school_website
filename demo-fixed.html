@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenfield International School - Multi-School Platform Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        /* Status Banner - NOW STICKY! */
+        .status-banner {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+        }
+
+        .status-banner strong {
+            margin: 0 1rem;
+        }
+
+        /* Header - Sticky below status bar */
+        header {
+            background: #0A3D62;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 42px;
+            z-index: 100;
+        }
+
+        .header-top {
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .header-top-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            object-fit: contain;
+            padding: 5px;
+            transition: opacity 0.3s ease;
+        }
+
+        .school-info h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .school-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Image loading states */
+        img:not(.loaded) {
+            opacity: 0.6;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+
+        img.error {
+            background: #f8d7da;
+            border: 2px dashed #dc3545;
+            padding: 1rem;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .hero-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(10,61,98,0.9) 0%, rgba(26,92,143,0.7) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #0A3D62;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #0A3D62;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Principal Message */
+        .principal-section {
+            background: linear-gradient(135deg, #EAF2F8 0%, #d4e9f7 100%);
+        }
+
+        .principal-message {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .principal-photo-container {
+            text-align: center;
+        }
+
+        .principal-photo {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        .principal-content h3 {
+            color: #0A3D62;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .principal-content p {
+            color: #444;
+            white-space: pre-line;
+            line-height: 1.8;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            color: #0A3D62;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .card .meta {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* Notice Board */
+        .notices-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .notice {
+            background: white;
+            border-left: 4px solid #0A3D62;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .notice:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .notice h4 {
+            color: #0A3D62;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: #dc3545;
+            color: white;
+            border-left-color: #dc3545;
+        }
+
+        .priority-medium {
+            background: #ffc107;
+            color: #333;
+            border-left-color: #ffc107;
+        }
+
+        .priority-low {
+            background: #28a745;
+            color: white;
+            border-left-color: #28a745;
+        }
+
+        .notice-content {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .notice-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 1rem;
+        }
+
+        .gallery-overlay h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .results-table th {
+            background: #0A3D62;
+            color: white;
+            font-weight: 600;
+        }
+
+        .results-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: #28a745;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        #modal-title {
+            color: #0A3D62;
+            margin-bottom: 1.5rem;
+        }
+
+        #student-search {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        #student-search:focus {
+            outline: none;
+            border-color: #0A3D62;
+        }
+
+        .student-results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .student-results-table th,
+        .student-results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .student-results-table th {
+            background: #0A3D62;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .student-results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .grade {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .grade-Aplus { background: #28a745; color: white; }
+        .grade-A { background: #20c997; color: white; }
+        .grade-B { background: #ffc107; color: #333; }
+        .grade-C { background: #fd7e14; color: white; }
+        .grade-F { background: #dc3545; color: white; }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #0A3D62;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            opacity: 0.6;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #0A3D62;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .principal-message {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+
+            .student-results-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-banner">
+        ✓ Backend API Running on port 8000 |
+        <strong>Status: <span id="api-status">Connected</span></strong> |
+        <strong>Data: <span id="data-status">Loading...</span></strong>
+    </div>
+
+    <header>
+        <div class="header-top">
+            <div class="header-top-container">
+                <div>📧 <span id="contact-email">Loading...</span> | 📞 <span id="contact-phone">Loading...</span></div>
+                <div>🎓 Excellence in Education Since <span id="founded-year">...</span></div>
+            </div>
+        </div>
+        <div class="header-container">
+            <div class="logo-section">
+                <img id="school-logo" src="" alt="School Logo" class="logo-img" style="display:none;">
+                <div class="school-info">
+                    <h1 id="school-name">Loading...</h1>
+                    <p id="school-tagline">Loading...</p>
+                </div>
+            </div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#faculty">Faculty</a>
+                <a href="#results">Results</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#notices">Notices</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <img id="hero-banner" src="" alt="School Banner" class="hero-banner" style="display:none;">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 id="hero-title">Welcome to Our School</h1>
+                <p id="hero-subtitle">Committed to Excellence in Education</p>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-students">...</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-faculty">...</div>
+                        <div class="stat-label">Faculty Members</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-years">...</div>
+                        <div class="stat-label">Years of Excellence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Principal's Message -->
+        <section class="section principal-section" id="about">
+            <h2>📝 Principal's Message</h2>
+            <div class="principal-message">
+                <div class="principal-photo-container">
+                    <img id="principal-photo" src="" alt="Principal" class="principal-photo">
+                    <p id="principal-info"><strong id="principal-name">Loading...</strong></p>
+                </div>
+                <div class="principal-content">
+                    <p id="principal-message">Loading message...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Notices -->
+        <section class="section" id="notices">
+            <h2>📢 Latest Notices & Announcements</h2>
+            <div class="notices-grid" id="notices-list">
+                <div class="loading"></div> Loading notices...
+            </div>
+        </section>
+
+        <!-- Faculty -->
+        <section class="section" id="faculty">
+            <h2>👨‍🏫 Our Distinguished Faculty</h2>
+            <div class="cards-grid" id="faculty-list">
+                <div class="loading"></div> Loading faculty...
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="section" id="gallery">
+            <h2>🖼️ Photo Gallery</h2>
+            <div class="gallery-grid" id="gallery-list">
+                <div class="loading"></div> Loading gallery...
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="section" id="results">
+            <h2>📊 Examination Results</h2>
+            <p style="color: #666; margin-bottom: 1rem;">Click on any result to view detailed student-wise marks</p>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Academic Year</th>
+                        <th>Class</th>
+                        <th>Examination</th>
+                        <th>Students</th>
+                        <th>Pass %</th>
+                        <th>Avg. Marks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="results-list">
+                    <tr><td colspan="7"><div class="loading"></div> Loading results...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Results Detail Modal -->
+    <div id="results-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeResultsModal()">&times;</span>
+            <h2 id="modal-title">Student Results</h2>
+
+            <input type="text" id="student-search"
+                   placeholder="🔍 Search by roll number or student name..."
+                   oninput="filterStudents()">
+
+            <table class="student-results-table">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>English</th>
+                        <th>Math</th>
+                        <th>Science</th>
+                        <th>Social Studies</th>
+                        <th>Total</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="student-results">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>📍 <span id="footer-address">Loading...</span></p>
+                    <p>📧 <span id="footer-email">Loading...</span></p>
+                    <p>📞 <span id="footer-phone">Loading...</span></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="#home" style="color: white;">Home</a></p>
+                    <p><a href="#about" style="color: white;">About Us</a></p>
+                    <p><a href="#faculty" style="color: white;">Faculty</a></p>
+                    <p><a href="#results" style="color: white;">Results</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Facilities</h3>
+                    <p id="facilities-list">Loading...</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 <span id="footer-school-name">School</span>. All rights reserved.</p>
+                <p style="margin-top: 0.5rem;">Powered by Multi-School Platform | Built with ❤️ using Claude Code</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let dataLoaded = 0;
+        const totalSections = 6;
+        let allStudentResults = [];
+        let currentResultData = [];
+
+        // Demo student results data (JSONB structure from FR-014)
+        const demoResultsData = {
+            "Class 10 - Mid-Term Examination": {
+                students: [
+                    {rollNo: "001", name: "Alice Johnson", marks: {english: 85, math: 92, science: 88, social: 90}, total: 355, percentage: 88.8, grade: "A"},
+                    {rollNo: "002", name: "Bob Smith", marks: {english: 78, math: 85, science: 82, social: 80}, total: 325, percentage: 81.3, grade: "A"},
+                    {rollNo: "003", name: "Charlie Brown", marks: {english: 92, math: 88, science: 95, social: 93}, total: 368, percentage: 92.0, grade: "A+"},
+                    {rollNo: "004", name: "Diana Prince", marks: {english: 88, math: 90, science: 87, social: 89}, total: 354, percentage: 88.5, grade: "A"},
+                    {rollNo: "005", name: "Edward Norton", marks: {english: 75, math: 78, science: 80, social: 76}, total: 309, percentage: 77.3, grade: "B"},
+                    {rollNo: "006", name: "Fiona Green", marks: {english: 95, math: 93, science: 91, social: 94}, total: 373, percentage: 93.3, grade: "A+"},
+                    {rollNo: "007", name: "George Martin", marks: {english: 70, math: 72, science: 75, social: 71}, total: 288, percentage: 72.0, grade: "B"},
+                    {rollNo: "008", name: "Hannah Lee", marks: {english: 89, math: 91, science: 88, social: 90}, total: 358, percentage: 89.5, grade: "A"},
+                    {rollNo: "009", name: "Ian Wright", marks: {english: 82, math: 84, science: 86, social: 83}, total: 335, percentage: 83.8, grade: "A"},
+                    {rollNo: "010", name: "Julia Roberts", marks: {english: 91, math: 89, science: 92, social: 90}, total: 362, percentage: 90.5, grade: "A+"}
+                ]
+            },
+            "Class 12 - Mid-Term Examination": {
+                students: [
+                    {rollNo: "101", name: "Kevin Hart", marks: {english: 88, math: 90, science: 85, social: 87}, total: 350, percentage: 87.5, grade: "A"},
+                    {rollNo: "102", name: "Laura Palmer", marks: {english: 92, math: 94, science: 91, social: 93}, total: 370, percentage: 92.5, grade: "A+"},
+                    {rollNo: "103", name: "Michael Scott", marks: {english: 78, math: 80, science: 82, social: 79}, total: 319, percentage: 79.8, grade: "B"},
+                    {rollNo: "104", name: "Nancy Drew", marks: {english: 95, math: 92, science: 94, social: 93}, total: 374, percentage: 93.5, grade: "A+"},
+                    {rollNo: "105", name: "Oliver Twist", marks: {english: 85, math: 87, science: 89, social: 86}, total: 347, percentage: 86.8, grade: "A"}
+                ]
+            }
+        };
+
+        function updateDataStatus() {
+            document.getElementById('data-status').textContent =
+                `${dataLoaded}/${totalSections} sections loaded`;
+        }
+
+        function loadImageWithFallback(img, url, altText) {
+            img.onload = () => img.classList.add('loaded');
+            img.onerror = () => {
+                img.classList.add('error');
+                img.alt = `⚠️ ${altText} - Failed to load`;
+                console.warn(`Failed to load image: ${url}`);
+            };
+            img.src = url;
+        }
+
+        // Load School Info
+        fetch(`${API_URL}/public/school`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('school-name').textContent = data.school_name || 'School Name';
+                document.getElementById('school-tagline').textContent = data.tagline || 'Excellence in Education';
+                document.getElementById('hero-title').textContent = `Welcome to ${data.school_name || 'Our School'}`;
+                document.getElementById('hero-subtitle').textContent = data.tagline || 'Excellence in Education';
+                document.getElementById('contact-email').textContent = data.contact_email || 'info@school.com';
+                document.getElementById('contact-phone').textContent = data.contact_phone || '(555) 000-0000';
+                document.getElementById('founded-year').textContent = data.founded_year || new Date().getFullYear() - 30;
+                document.getElementById('footer-address').textContent = data.address || 'School Address';
+                document.getElementById('footer-email').textContent = data.contact_email || 'info@school.com';
+                document.getElementById('footer-phone').textContent = data.contact_phone || '(555) 000-0000';
+                document.getElementById('footer-school-name').textContent = data.school_name || 'School';
+
+                // Load images with fallback
+                const logo = document.getElementById('school-logo');
+                logo.style.display = 'block';
+                loadImageWithFallback(logo, data.logo_url || 'http://localhost:8000/images/school%20logo.png', 'School Logo');
+
+                const banner = document.getElementById('hero-banner');
+                banner.style.display = 'block';
+                loadImageWithFallback(banner, data.banner_url || 'http://localhost:8000/images/School%20banner.png', 'School Banner');
+
+                // Stats
+                document.getElementById('stat-students').textContent = data.student_count || '1000+';
+                document.getElementById('stat-faculty').textContent = data.faculty_count || '50+';
+                document.getElementById('stat-years').textContent = data.founded_year ?
+                    new Date().getFullYear() - data.founded_year : '30+';
+
+                // Facilities
+                if (data.facilities) {
+                    document.getElementById('facilities-list').innerHTML =
+                        data.facilities.map(f => `<p>✓ ${f}</p>`).join('');
+                }
+
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => {
+                console.error('Failed to load school info:', err);
+                document.getElementById('school-name').textContent = 'Demo School';
+                document.getElementById('school-tagline').textContent = 'Excellence in Education';
+            });
+
+        // Load Principal Message
+        fetch(`${API_URL}/public/principal`)
+            .then(res => res.json())
+            .then(data => {
+                const photo = document.getElementById('principal-photo');
+                loadImageWithFallback(photo, data.photo_url || 'http://localhost:8000/images/principal%20image.png', 'Principal');
+
+                document.getElementById('principal-name').textContent = data.principal_name || 'Principal';
+                document.getElementById('principal-info').innerHTML =
+                    `<strong>${data.principal_name || 'Principal'}</strong><br>${data.designation || ''}<br>${data.qualification || ''}`;
+                document.getElementById('principal-message').textContent = data.message || 'Welcome to our school!';
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => console.error('Failed to load principal info:', err));
+
+        // Load Notices
+        fetch(`${API_URL}/public/notices`)
+            .then(res => res.json())
+            .then(notices => {
+                const noticesList = document.getElementById('notices-list');
+                noticesList.innerHTML = notices
+                    .filter(n => new Date(n.expiry_date) > new Date())
+                    .slice(0, 5)
+                    .map(notice => `
+                        <div class="notice priority-${notice.priority}">
+                            <div class="notice-header">
+                                <h4>${notice.title}</h4>
+                                <span class="priority-badge">${notice.priority}</span>
+                            </div>
+                            <div class="notice-content">${notice.content}</div>
+                            <div class="notice-footer">
+                                <span>📁 ${notice.category || 'General'}</span>
+                                <span>📅 Published: ${new Date(notice.published_date).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => console.error('Failed to load notices:', err));
+
+        // Load Faculty
+        fetch(`${API_URL}/public/faculty`)
+            .then(res => res.json())
+            .then(faculty => {
+                const facultyList = document.getElementById('faculty-list');
+                facultyList.innerHTML = faculty.map(member => `
+                    <div class="card">
+                        <img src="${member.photo_url}" alt="${member.name}" class="card-image"
+                             onload="this.classList.add('loaded')"
+                             onerror="this.classList.add('error'); this.alt='⚠️ Photo unavailable';">
+                        <div class="card-content">
+                            <h3>${member.name}</h3>
+                            <p><strong>${member.designation}</strong></p>
+                            <p>Department: ${member.department}</p>
+                            <p>${member.qualification || ''}</p>
+                            <p class="meta">Experience: ${member.experience_years || 0} years</p>
+                            ${member.specialization ? `<p class="meta">Specialization: ${member.specialization}</p>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => console.error('Failed to load faculty:', err));
+
+        // Load Gallery
+        fetch(`${API_URL}/public/gallery`)
+            .then(res => res.json())
+            .then(gallery => {
+                const galleryList = document.getElementById('gallery-list');
+                galleryList.innerHTML = gallery.map(item => `
+                    <div class="gallery-item">
+                        <img src="${item.image_url}" alt="${item.title}"
+                             onload="this.classList.add('loaded')"
+                             onerror="this.classList.add('error'); this.alt='⚠️ Image unavailable';">
+                        <div class="gallery-overlay">
+                            <h4>${item.title}</h4>
+                            <p>${item.description || ''}</p>
+                        </div>
+                    </div>
+                `).join('');
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => console.error('Failed to load gallery:', err));
+
+        // Load Results with click handlers
+        fetch(`${API_URL}/public/results`)
+            .then(res => res.json())
+            .then(results => {
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = results.map(result => {
+                    const resultKey = `${result.class_level} - ${result.exam_type}`;
+                    return `
+                    <tr onclick="showResultDetails('${resultKey}')" title="Click to view detailed student results">
+                        <td>${result.academic_year}</td>
+                        <td>${result.class_level}</td>
+                        <td>${result.exam_type}</td>
+                        <td>${result.total_students || 0}</td>
+                        <td>${result.pass_percentage || 0}%</td>
+                        <td>${result.average_marks || 0}</td>
+                        <td><span class="status-badge">✓ Click to view details</span></td>
+                    </tr>
+                `;
+                }).join('');
+                dataLoaded++;
+                updateDataStatus();
+            })
+            .catch(err => console.error('Failed to load results:', err));
+
+        // Results Modal Functions
+        function showResultDetails(resultKey) {
+            const data = demoResultsData[resultKey];
+            if (!data) {
+                alert('Detailed results for this exam are not available in the demo.');
+                return;
+            }
+
+            document.getElementById('modal-title').textContent = resultKey + " - Student Results";
+            currentResultData = data.students;
+            allStudentResults = [...data.students];
+
+            renderStudentResults(currentResultData);
+            document.getElementById('results-modal').style.display = 'block';
+            document.getElementById('student-search').value = '';
+        }
+
+        function renderStudentResults(students) {
+            const tbody = document.getElementById('student-results');
+            tbody.innerHTML = students.map(s => `
+                <tr>
+                    <td><strong>${s.rollNo}</strong></td>
+                    <td>${s.name}</td>
+                    <td>${s.marks.english}</td>
+                    <td>${s.marks.math}</td>
+                    <td>${s.marks.science}</td>
+                    <td>${s.marks.social}</td>
+                    <td><strong>${s.total}</strong></td>
+                    <td><strong>${s.percentage.toFixed(1)}%</strong></td>
+                    <td><span class="grade grade-${s.grade.replace('+','plus')}">${s.grade}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function filterStudents() {
+            const searchTerm = document.getElementById('student-search').value.toLowerCase();
+            const filtered = allStudentResults.filter(student =>
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.rollNo.toLowerCase().includes(searchTerm)
+            );
+            renderStudentResults(filtered);
+        }
+
+        function closeResultsModal() {
+            document.getElementById('results-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('results-modal');
+            if (event.target == modal) {
+                closeResultsModal();
+            }
+        }
+
+        // API Status Check
+        setInterval(() => {
+            fetch(`${API_URL}/health`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('api-status').innerHTML =
+                        `✓ Connected (v${data.version})`;
+                })
+                .catch(() => {
+                    document.getElementById('api-status').innerHTML = '✗ Disconnected';
+                });
+        }, 5000);
+    </script>
+</body>
+</html>

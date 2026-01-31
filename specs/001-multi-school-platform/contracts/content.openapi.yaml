@@ -1,0 +1,1294 @@
+openapi: 3.0.3
+info:
+  title: Multi-School Platform - Content Management API
+  description: |
+    Content management endpoints for School Admin and Staff users.
+    Manages faculty, results, notices, gallery images, and principal profile.
+    All endpoints enforce multi-tenant isolation via RLS policies.
+  version: 1.0.0
+  contact:
+    name: Platform Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production API
+  - url: http://localhost:8000/v1
+    description: Development API
+
+tags:
+  - name: Faculty
+    description: Faculty member management (School Admin only)
+  - name: Results
+    description: Student result management (School Admin only)
+  - name: Notices
+    description: Notice management (School Admin and Staff)
+  - name: Gallery
+    description: Gallery image management (School Admin and Staff)
+  - name: Principal
+    description: Principal profile management (School Admin only)
+  - name: Branding
+    description: School branding customization (School Admin only)
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Faculty Management
+  /content/faculty:
+    get:
+      tags:
+        - Faculty
+      summary: List faculty members
+      description: |
+        Retrieve all faculty members for authenticated user's school.
+        Filtered by school_id via RLS policy.
+      operationId: listFaculty
+      parameters:
+        - name: is_visible
+          in: query
+          schema:
+            type: boolean
+          description: Filter by visibility on public website
+      responses:
+        '200':
+          description: Faculty list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  faculty:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Faculty'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Faculty
+      summary: Create faculty member
+      description: |
+        Add new faculty member to authenticated user's school.
+        School Admin only. Requires multipart/form-data for photo upload.
+      operationId: createFaculty
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateFacultyRequest'
+      responses:
+        '201':
+          description: Faculty created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Faculty'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          $ref: '#/components/responses/FileTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /content/faculty/{faculty_id}:
+    get:
+      tags:
+        - Faculty
+      summary: Get faculty by ID
+      description: Retrieve single faculty member details
+      operationId: getFaculty
+      parameters:
+        - $ref: '#/components/parameters/FacultyId'
+      responses:
+        '200':
+          description: Faculty retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Faculty'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Faculty
+      summary: Update faculty member
+      description: Update faculty information. School Admin only.
+      operationId: updateFaculty
+      parameters:
+        - $ref: '#/components/parameters/FacultyId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateFacultyRequest'
+      responses:
+        '200':
+          description: Faculty updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Faculty'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          $ref: '#/components/responses/FileTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Faculty
+      summary: Delete faculty member
+      description: Remove faculty member. School Admin only.
+      operationId: deleteFaculty
+      parameters:
+        - $ref: '#/components/parameters/FacultyId'
+      responses:
+        '200':
+          description: Faculty deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Result Management
+  /content/results:
+    get:
+      tags:
+        - Results
+      summary: List results
+      description: |
+        Retrieve all results for authenticated user's school.
+        Supports filtering by academic year and class.
+      operationId: listResults
+      parameters:
+        - name: academic_year
+          in: query
+          schema:
+            type: string
+          example: '2024-25'
+        - name: class_level
+          in: query
+          schema:
+            type: string
+          example: 'Class 10'
+        - name: is_published
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Results retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Result'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Results
+      summary: Create result
+      description: |
+        Upload new result for authenticated user's school.
+        School Admin only. Result data must follow structured format.
+      operationId: createResult
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResultRequest'
+      responses:
+        '201':
+          description: Result created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /content/results/{result_id}:
+    get:
+      tags:
+        - Results
+      summary: Get result by ID
+      description: Retrieve single result details
+      operationId: getResult
+      parameters:
+        - $ref: '#/components/parameters/ResultId'
+      responses:
+        '200':
+          description: Result retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Results
+      summary: Update result
+      description: |
+        Update existing result. School Admin only.
+        All changes logged to audit_logs table with before/after values.
+      operationId: updateResult
+      parameters:
+        - $ref: '#/components/parameters/ResultId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResultRequest'
+      responses:
+        '200':
+          description: Result updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  # Notice Management
+  /content/notices:
+    get:
+      tags:
+        - Notices
+      summary: List notices
+      description: |
+        Retrieve all notices for authenticated user's school.
+        School Admin and Staff.
+      operationId: listNotices
+      parameters:
+        - name: is_published
+          in: query
+          schema:
+            type: boolean
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notices retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Notices
+      summary: Create notice
+      description: |
+        Publish new notice. School Admin and Staff.
+        Notices automatically hidden after expiry_date.
+      operationId: createNotice
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateNoticeRequest'
+      responses:
+        '201':
+          description: Notice created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /content/notices/{notice_id}:
+    get:
+      tags:
+        - Notices
+      summary: Get notice by ID
+      description: Retrieve single notice details
+      operationId: getNotice
+      parameters:
+        - $ref: '#/components/parameters/NoticeId'
+      responses:
+        '200':
+          description: Notice retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Notices
+      summary: Update notice
+      description: Update existing notice. School Admin and Staff.
+      operationId: updateNotice
+      parameters:
+        - $ref: '#/components/parameters/NoticeId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateNoticeRequest'
+      responses:
+        '200':
+          description: Notice updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Notices
+      summary: Delete notice
+      description: Remove notice. School Admin and Staff.
+      operationId: deleteNotice
+      parameters:
+        - $ref: '#/components/parameters/NoticeId'
+      responses:
+        '200':
+          description: Notice deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Gallery Management
+  /content/gallery:
+    get:
+      tags:
+        - Gallery
+      summary: List gallery images
+      description: |
+        Retrieve all gallery images for authenticated user's school.
+        Supports filtering by category.
+      operationId: listGalleryImages
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          example: sports
+        - name: is_visible
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Gallery images retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  images:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GalleryImage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Gallery
+      summary: Upload gallery image
+      description: |
+        Upload new gallery image. School Admin and Staff.
+        Maximum file size: 5MB. Formats: jpg, png, webp.
+        Updates school storage_used_bytes on successful upload.
+      operationId: uploadGalleryImage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadGalleryImageRequest'
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryImage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '413':
+          $ref: '#/components/responses/FileTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '507':
+          description: Storage limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Storage limit exceeded. Current: 9.8GB, Limit: 10GB
+
+  /content/gallery/{image_id}:
+    delete:
+      tags:
+        - Gallery
+      summary: Delete gallery image
+      description: |
+        Remove gallery image. School Admin and Staff.
+        Updates school storage_used_bytes on successful deletion.
+      operationId: deleteGalleryImage
+      parameters:
+        - $ref: '#/components/parameters/ImageId'
+      responses:
+        '200':
+          description: Image deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Principal Profile Management
+  /content/principal:
+    get:
+      tags:
+        - Principal
+      summary: Get principal profile
+      description: Retrieve principal profile for authenticated user's school
+      operationId: getPrincipalProfile
+      responses:
+        '200':
+          description: Principal profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Principal
+      summary: Update principal profile
+      description: |
+        Update principal profile. School Admin only.
+        Creates profile if it doesn't exist (upsert).
+      operationId: updatePrincipalProfile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdatePrincipalRequest'
+      responses:
+        '200':
+          description: Principal profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          $ref: '#/components/responses/FileTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  # Branding Management
+  /content/branding:
+    get:
+      tags:
+        - Branding
+      summary: Get school branding
+      description: Retrieve branding configuration for authenticated user's school
+      operationId: getBranding
+      responses:
+        '200':
+          description: Branding retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags:
+        - Branding
+      summary: Update school branding
+      description: |
+        Update school branding (logo, colors). School Admin only.
+        Updates schools table for authenticated user's school.
+      operationId: updateBranding
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateBrandingRequest'
+      responses:
+        '200':
+          description: Branding updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          $ref: '#/components/responses/FileTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    FacultyId:
+      name: faculty_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ResultId:
+      name: result_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    NoticeId:
+      name: notice_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ImageId:
+      name: image_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Faculty:
+      type: object
+      required:
+        - faculty_id
+        - school_id
+        - full_name
+        - designation
+        - qualification
+        - experience_years
+      properties:
+        faculty_id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+          example: Dr. Jane Smith
+        designation:
+          type: string
+          example: Principal
+        qualification:
+          type: string
+          example: Ph.D. in Education
+        experience_years:
+          type: integer
+          minimum: 0
+          example: 15
+        subject:
+          type: string
+          nullable: true
+          example: Mathematics
+        photo_url:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        display_order:
+          type: integer
+          example: 1
+        is_visible:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateFacultyRequest:
+      type: object
+      required:
+        - full_name
+        - designation
+        - qualification
+        - experience_years
+      properties:
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        designation:
+          type: string
+          minLength: 2
+          maxLength: 100
+        qualification:
+          type: string
+          minLength: 2
+          maxLength: 255
+        experience_years:
+          type: integer
+          minimum: 0
+        subject:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 20
+        bio:
+          type: string
+          maxLength: 1000
+        photo:
+          type: string
+          format: binary
+          description: Faculty photo (max 5MB, jpg/png/webp)
+        display_order:
+          type: integer
+          default: 0
+        is_visible:
+          type: boolean
+          default: true
+
+    UpdateFacultyRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        designation:
+          type: string
+          minLength: 2
+          maxLength: 100
+        qualification:
+          type: string
+          minLength: 2
+          maxLength: 255
+        experience_years:
+          type: integer
+          minimum: 0
+        subject:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 20
+        bio:
+          type: string
+          maxLength: 1000
+        photo:
+          type: string
+          format: binary
+        display_order:
+          type: integer
+        is_visible:
+          type: boolean
+
+    Result:
+      type: object
+      required:
+        - result_id
+        - school_id
+        - academic_year
+        - class_level
+        - exam_type
+        - result_data
+        - is_published
+      properties:
+        result_id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        academic_year:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: '2024-25'
+        class_level:
+          type: string
+          example: 'Class 10'
+        exam_type:
+          type: string
+          example: Annual
+        result_data:
+          $ref: '#/components/schemas/ResultData'
+        is_published:
+          type: boolean
+        published_date:
+          type: string
+          format: date-time
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ResultData:
+      type: object
+      required:
+        - students
+        - statistics
+      properties:
+        students:
+          type: array
+          items:
+            type: object
+            required:
+              - roll_number
+              - student_name
+              - total_marks
+              - percentage
+              - grade
+            properties:
+              roll_number:
+                type: string
+              student_name:
+                type: string
+              total_marks:
+                type: number
+              percentage:
+                type: number
+                format: float
+              grade:
+                type: string
+              rank:
+                type: integer
+              subjects:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    subject_name:
+                      type: string
+                    marks_obtained:
+                      type: number
+                    max_marks:
+                      type: number
+                    grade:
+                      type: string
+        statistics:
+          type: object
+          properties:
+            total_students:
+              type: integer
+            pass_percentage:
+              type: number
+              format: float
+            highest_marks:
+              type: number
+            average_percentage:
+              type: number
+              format: float
+
+    CreateResultRequest:
+      type: object
+      required:
+        - academic_year
+        - class_level
+        - exam_type
+        - result_data
+      properties:
+        academic_year:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+        class_level:
+          type: string
+        exam_type:
+          type: string
+        result_data:
+          $ref: '#/components/schemas/ResultData'
+        is_published:
+          type: boolean
+          default: false
+
+    UpdateResultRequest:
+      type: object
+      properties:
+        result_data:
+          $ref: '#/components/schemas/ResultData'
+        is_published:
+          type: boolean
+        reason:
+          type: string
+          description: Reason for update (logged to audit_logs)
+
+    Notice:
+      type: object
+      required:
+        - notice_id
+        - school_id
+        - title
+        - description
+        - priority_level
+        - is_published
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: School Reopening Date
+        description:
+          type: string
+          example: School will reopen on February 1, 2026
+        priority_level:
+          type: integer
+          minimum: 0
+          maximum: 5
+          example: 2
+        category:
+          type: string
+          example: general
+        published_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+          nullable: true
+        is_published:
+          type: boolean
+        attachment_url:
+          type: string
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateNoticeRequest:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 500
+        description:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        priority_level:
+          type: integer
+          minimum: 0
+          maximum: 5
+          default: 0
+        category:
+          type: string
+          default: general
+        expiry_date:
+          type: string
+          format: date-time
+        is_published:
+          type: boolean
+          default: false
+        attachment:
+          type: string
+          format: binary
+          description: Optional attachment file
+
+    UpdateNoticeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 500
+        description:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        priority_level:
+          type: integer
+          minimum: 0
+          maximum: 5
+        category:
+          type: string
+        expiry_date:
+          type: string
+          format: date-time
+        is_published:
+          type: boolean
+        attachment:
+          type: string
+          format: binary
+
+    GalleryImage:
+      type: object
+      required:
+        - image_id
+        - school_id
+        - category
+        - image_url
+        - file_size_bytes
+      properties:
+        image_id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          example: sports
+        image_url:
+          type: string
+        thumbnail_url:
+          type: string
+          nullable: true
+        caption:
+          type: string
+          nullable: true
+        event_date:
+          type: string
+          format: date
+          nullable: true
+        display_order:
+          type: integer
+        is_visible:
+          type: boolean
+        file_size_bytes:
+          type: integer
+        uploaded_by:
+          type: string
+          format: uuid
+        upload_date:
+          type: string
+          format: date-time
+
+    UploadGalleryImageRequest:
+      type: object
+      required:
+        - category
+        - image
+      properties:
+        category:
+          type: string
+          maxLength: 100
+        caption:
+          type: string
+          maxLength: 500
+        event_date:
+          type: string
+          format: date
+        is_visible:
+          type: boolean
+          default: true
+        image:
+          type: string
+          format: binary
+          description: Image file (max 5MB, jpg/png/webp)
+
+    PrincipalProfile:
+      type: object
+      required:
+        - school_id
+        - principal_name
+        - message_text
+      properties:
+        school_id:
+          type: string
+          format: uuid
+        principal_name:
+          type: string
+        photo_url:
+          type: string
+          nullable: true
+        message_text:
+          type: string
+        qualification:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        updated_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    UpdatePrincipalRequest:
+      type: object
+      required:
+        - principal_name
+        - message_text
+      properties:
+        principal_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        message_text:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        qualification:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 20
+        photo:
+          type: string
+          format: binary
+          description: Principal photo (max 5MB, jpg/png/webp)
+
+    Branding:
+      type: object
+      required:
+        - school_id
+        - primary_color
+        - secondary_color
+      properties:
+        school_id:
+          type: string
+          format: uuid
+        logo_url:
+          type: string
+          nullable: true
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+
+    UpdateBrandingRequest:
+      type: object
+      properties:
+        primary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+        secondary_color:
+          type: string
+          pattern: '^#[0-9A-Fa-f]{6}$'
+        logo:
+          type: string
+          format: binary
+          description: School logo (max 5MB, jpg/png/webp)
+
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+
+    ValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: array
+          items:
+            type: object
+
+  responses:
+    Unauthorized:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+    FileTooLarge:
+      description: File size exceeds 5MB limit
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: File size exceeds 5MB limit. Please compress the image.

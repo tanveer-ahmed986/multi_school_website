@@ -1,0 +1,25 @@
+# Multi-School Website Platform - Local development
+# Start: docker-compose up -d postgres
+
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: multi_school_postgres
+    environment:
+      POSTGRES_DB: multi_school_db
+      POSTGRES_USER: school_admin
+      POSTGRES_PASSWORD: dev_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U school_admin -d multi_school_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
