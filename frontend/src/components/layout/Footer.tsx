@@ -36,25 +36,25 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-3">Contact</h3>
             <div className="space-y-2 text-sm">
-              {config?.contact_email && (
+              {config?.email && (
                 <p className="text-gray-300">
                   <span className="font-semibold">Email:</span>{' '}
                   <a
-                    href={`mailto:${config.contact_email}`}
+                    href={`mailto:${config.email}`}
                     className="hover:text-white transition-colors"
                   >
-                    {config.contact_email}
+                    {config.email}
                   </a>
                 </p>
               )}
-              {config?.contact_phone && (
+              {config?.phone && (
                 <p className="text-gray-300">
                   <span className="font-semibold">Phone:</span>{' '}
                   <a
-                    href={`tel:${config.contact_phone}`}
+                    href={`tel:${config.phone}`}
                     className="hover:text-white transition-colors"
                   >
-                    {config.contact_phone}
+                    {config.phone}
                   </a>
                 </p>
               )}
