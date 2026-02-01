@@ -1,7 +1,0 @@
-<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="600" fill="#DCFCE7"/>
-  <polygon points="400,150 450,250 550,250 475,320 500,420 400,360 300,420 325,320 250,250 350,250" fill="#F59E0B"/>
-  <rect x="300" y="350" width="200" height="100" fill="#10B981"/>
-  <text x="400" y="500" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#14532D" text-anchor="middle">Sports Championship Trophy</text>
-  <text x="400" y="535" font-family="Arial, sans-serif" font-size="16" fill="#166534" text-anchor="middle">Inter-School Winners 2023</text>
-</svg>

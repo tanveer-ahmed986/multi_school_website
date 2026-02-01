@@ -1,7 +1,0 @@
-<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="600" fill="#FEF3C7"/>
-  <circle cx="400" cy="200" r="80" fill="#F59E0B"/>
-  <rect x="200" y="300" width="400" height="200" fill="#D97706"/>
-  <text x="400" y="520" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#78350F" text-anchor="middle">Annual Day Celebration 2023</text>
-  <text x="400" y="555" font-family="Arial, sans-serif" font-size="16" fill="#92400E" text-anchor="middle">Cultural Programs & Performances</text>
-</svg>

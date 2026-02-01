@@ -1,7 +1,0 @@
-<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-  <rect width="300" height="300" fill="#D1FAE5"/>
-  <circle cx="150" cy="100" r="45" fill="#10B981"/>
-  <path d="M 75 200 Q 150 170 225 200 L 225 300 L 75 300 Z" fill="#10B981"/>
-  <text x="150" y="260" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#065F46" text-anchor="middle">Ms. Emily Davis</text>
-  <text x="150" y="280" font-family="Arial, sans-serif" font-size="12" fill="#065F46" text-anchor="middle">English Teacher</text>
-</svg>
