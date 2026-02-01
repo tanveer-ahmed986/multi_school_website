@@ -72,8 +72,8 @@ export function PrincipalMessage() {
             <p className="text-gray-600 mb-4">{principal.qualification}</p>
           )}
 
-          <div data-testid="principal-message" className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-            {principal.message_text}
+          <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+            {principal.message}
           </div>
 
           {(principal.email || principal.phone) && (

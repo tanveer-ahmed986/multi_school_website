@@ -3,9 +3,11 @@
  */
 export interface PrincipalProfile {
   principal_name: string;
-  photo_url: string | null;
-  message_text: string;
+  designation?: string;
   qualification: string | null;
-  email: string | null;
-  phone: string | null;
+  experience_years?: number;
+  photo_url: string | null;
+  message: string;
+  email?: string | null;
+  phone?: string | null;
 }

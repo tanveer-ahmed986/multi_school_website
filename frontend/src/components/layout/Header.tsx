@@ -41,7 +41,7 @@ export function Header() {
       <SkipToContent />
 
       <header
-        className="shadow-md"
+        className="sticky top-0 z-50 shadow-md"
         style={{ backgroundColor: primaryColor }}
         role="banner"
       >
