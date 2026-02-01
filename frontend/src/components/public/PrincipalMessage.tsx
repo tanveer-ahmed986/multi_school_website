@@ -15,7 +15,8 @@ export function PrincipalMessage() {
   useEffect(() => {
     const fetchPrincipal = async () => {
       try {
-        const data = await publicService.getPrincipal();
+        const response = await fetch('/data/principal.json');
+        const data = await response.json();
         setPrincipal(data);
       } catch (error) {
         console.error('Failed to fetch principal profile:', error);

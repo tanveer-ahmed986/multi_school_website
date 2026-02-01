@@ -22,8 +22,25 @@ export default function GalleryPage() {
   const fetchGallery = async () => {
     try {
       setLoading(true);
-      const data = await publicService.getGallery(selectedCategory || undefined);
-      setImages(data);
+      const response = await fetch('/data/gallery.json');
+      const rawData = await response.json();
+
+      // Map static data to GalleryImage type
+      let mappedData = rawData.map((item: any) => ({
+        image_id: item.id,
+        category: item.category.toLowerCase(),
+        image_url: item.image_url,
+        thumbnail_url: null,
+        caption: item.title,
+        event_date: item.upload_date
+      }));
+
+      // Filter by category if selected
+      if (selectedCategory) {
+        mappedData = mappedData.filter((img: GalleryImage) => img.category === selectedCategory);
+      }
+
+      setImages(mappedData);
     } catch (error) {
       console.error('Failed to fetch gallery:', error);
       setImages([]);

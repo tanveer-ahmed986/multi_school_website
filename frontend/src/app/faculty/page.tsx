@@ -16,8 +16,26 @@ export default function FacultyPage() {
   useEffect(() => {
     const fetchFaculty = async () => {
       try {
-        const data = await publicService.getFaculty();
-        setFaculty(data);
+        const response = await fetch('/data/faculty.json');
+        const rawData = await response.json();
+
+        // Map static data to Faculty type
+        const mappedData = rawData
+          .filter((item: any) => item.is_visible)
+          .map((item: any) => ({
+            faculty_id: item.id,
+            full_name: item.name,
+            designation: item.designation,
+            qualification: item.qualification,
+            experience_years: item.experience_years,
+            subject: item.subjects ? item.subjects.join(', ') : null,
+            photo_url: item.photo_url,
+            email: item.email,
+            phone: item.phone || null,
+            bio: null
+          }));
+
+        setFaculty(mappedData);
       } catch (error) {
         console.error('Failed to fetch faculty:', error);
         setFaculty([]);

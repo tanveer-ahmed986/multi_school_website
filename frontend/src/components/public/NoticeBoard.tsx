@@ -20,8 +20,24 @@ export function NoticeBoard({ limit }: NoticeBoardProps) {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await publicService.getNotices();
-        setNotices(limit ? data.slice(0, limit) : data);
+        const response = await fetch('/data/notices.json');
+        const rawData = await response.json();
+
+        // Map static data to Notice type
+        const mappedData = rawData
+          .filter((item: any) => item.is_active)
+          .map((item: any) => ({
+            notice_id: item.id,
+            title: item.title,
+            description: item.content,
+            priority_level: item.priority === 'high' ? 3 : item.priority === 'medium' ? 2 : 1,
+            category: '',
+            published_date: item.published_date,
+            expiry_date: null,
+            attachment_url: null
+          }));
+
+        setNotices(limit ? mappedData.slice(0, limit) : mappedData);
       } catch (error) {
         console.error('Failed to fetch notices:', error);
         setNotices([]);

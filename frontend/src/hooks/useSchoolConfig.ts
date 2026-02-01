@@ -30,7 +30,8 @@ export function useSchoolConfig(): UseSchoolConfigReturn {
     try {
       setLoading(true);
       setError(null);
-      const schoolConfig = await publicService.getSchoolInfo();
+      const response = await fetch('/data/school-config.json');
+      const schoolConfig = await response.json();
       setConfig(schoolConfig);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch school config'));
