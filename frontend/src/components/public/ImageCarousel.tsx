@@ -34,7 +34,7 @@ export function ImageCarousel() {
 
   const fetchImages = async () => {
     try {
-      const response = await fetch('http://localhost:8000/public/gallery');
+      const response = await fetch('/data/gallery.json');
       const data = await response.json();
       setImages(data);
     } catch (error) {

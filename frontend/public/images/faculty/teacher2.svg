@@ -1,0 +1,7 @@
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#FEE2E2"/>
+  <circle cx="150" cy="100" r="45" fill="#EF4444"/>
+  <path d="M 75 200 Q 150 170 225 200 L 225 300 L 75 300 Z" fill="#EF4444"/>
+  <text x="150" y="260" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#991B1B" text-anchor="middle">Mr. Robert Williams</text>
+  <text x="150" y="280" font-family="Arial, sans-serif" font-size="12" fill="#991B1B" text-anchor="middle">Science Teacher</text>
+</svg>

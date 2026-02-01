@@ -34,9 +34,10 @@ export function TopStudents() {
 
   const fetchTopStudents = async () => {
     try {
-      // Fetch the latest result (Class 10 Mid-Term as default)
-      const response = await fetch('http://localhost:8000/public/results/1/students');
-      const data: ResultWithStudents = await response.json();
+      // Fetch the latest result from static data
+      const response = await fetch('/data/results.json');
+      const allResults = await response.json();
+      const data: ResultWithStudents = allResults[0]; // Get first result
 
       console.log('Fetched data:', data);
       console.log('Students count:', data.students?.length);

@@ -11,13 +11,13 @@ export function TopStudentsSimple() {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    fetch('http://localhost:8000/public/results/1/students')
+    fetch('/data/results.json')
       .then(res => res.json())
       .then(data => {
         console.log('===== API Response =====', data);
 
-        if (data && data.students) {
-          const top3 = data.students.slice(0, 3).sort((a: any, b: any) => a.rank - b.rank);
+        if (data && data.length > 0 && data[0].students) {
+          const top3 = data[0].students.slice(0, 3).sort((a: any, b: any) => a.rank - b.rank);
           console.log('===== Top 3 Students =====', top3);
           setStudents(top3);
         } else {

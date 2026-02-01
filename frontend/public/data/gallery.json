@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Annual Day Celebration 2023",
+    "description": "Students performing cultural dances and skits during our Annual Day celebration. The event showcased the diverse talents of our students.",
+    "image_url": "/images/gallery/event1.svg",
+    "category": "Events",
+    "upload_date": "2024-01-15"
+  },
+  {
+    "id": "2",
+    "title": "Science Exhibition Winners",
+    "description": "Students showcasing their innovative science projects. Our students won multiple awards at the inter-school science exhibition.",
+    "image_url": "/images/gallery/event2.svg",
+    "category": "Academics",
+    "upload_date": "2024-01-20"
+  },
+  {
+    "id": "3",
+    "title": "Sports Championship Trophy",
+    "description": "Our school team winning the inter-school sports championship. Proud moment for ABC Higher Secondary School!",
+    "image_url": "/images/gallery/event3.svg",
+    "category": "Sports",
+    "upload_date": "2024-01-25"
+  }
+]

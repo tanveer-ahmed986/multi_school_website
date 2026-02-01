@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "name": "Mrs. Sarah Johnson",
+    "designation": "Senior Mathematics Teacher & Department Head",
+    "qualification": "M.Sc. Mathematics, B.Ed.",
+    "photo_url": "/images/faculty/teacher1.svg",
+    "email": "sarah.johnson@abchighersecondary.edu",
+    "subjects": ["Mathematics", "Statistics", "Algebra"],
+    "experience_years": 12,
+    "is_visible": true
+  },
+  {
+    "id": "2",
+    "name": "Mr. Robert Williams",
+    "designation": "Physics & Chemistry Teacher",
+    "qualification": "M.Sc. Physics, B.Ed.",
+    "photo_url": "/images/faculty/teacher2.svg",
+    "email": "robert.williams@abchighersecondary.edu",
+    "subjects": ["Physics", "Chemistry"],
+    "experience_years": 10,
+    "is_visible": true
+  },
+  {
+    "id": "3",
+    "name": "Ms. Emily Davis",
+    "designation": "English Language & Literature Teacher",
+    "qualification": "M.A. English Literature, B.Ed.",
+    "photo_url": "/images/faculty/teacher3.svg",
+    "email": "emily.davis@abchighersecondary.edu",
+    "subjects": ["English", "Literature"],
+    "experience_years": 8,
+    "is_visible": true
+  }
+]

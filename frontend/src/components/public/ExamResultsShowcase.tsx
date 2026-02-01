@@ -99,7 +99,7 @@ export function ExamResultsShowcase() {
 
   const fetchResults = async () => {
     try {
-      const response = await fetch('http://localhost:8000/public/results');
+      const response = await fetch('/data/results.json');
       const data = await response.json();
       setResults(data);
     } catch (error) {
@@ -112,10 +112,11 @@ export function ExamResultsShowcase() {
   const fetchStudentResults = async (resultId: string) => {
     setDetailsLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/public/results/${resultId}/students`);
+      const response = await fetch('/data/results.json');
       const data = await response.json();
-      if (data.students) {
-        setStudents(data.students.sort((a: Student, b: Student) => a.rank - b.rank));
+      const result = data.find((r: any) => r.id === resultId);
+      if (result && result.students) {
+        setStudents(result.students.sort((a: Student, b: Student) => a.rank - b.rank));
         setSelectedResult(resultId);
       }
     } catch (error) {
