@@ -115,7 +115,7 @@ export function ExamResultsShowcase() {
       const response = await fetch(`http://localhost:8000/public/results/${resultId}/students`);
       const data = await response.json();
       if (data.students) {
-        setStudents(data.students.sort((a, b) => a.rank - b.rank));
+        setStudents(data.students.sort((a: Student, b: Student) => a.rank - b.rank));
         setSelectedResult(resultId);
       }
     } catch (error) {

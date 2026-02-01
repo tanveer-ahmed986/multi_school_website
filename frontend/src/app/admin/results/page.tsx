@@ -123,6 +123,7 @@ export default function ResultsManagementPage() {
             </button>
           </form>
         </div>
+        </div>
       </div>
     </PermissionGuard>
   );
