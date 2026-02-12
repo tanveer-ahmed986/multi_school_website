@@ -129,8 +129,11 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block text-white hover:text-gray-200 py-2 focus:outline-none focus:ring-2 focus:ring-white rounded px-2"
-                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-white hover:text-gray-200 py-2 focus:outline-none focus:ring-2 focus:ring-white rounded px-2 touch-manipulation"
+                  onClick={(e) => {
+                    // Allow navigation to complete before closing menu
+                    setTimeout(() => setMobileMenuOpen(false), 100);
+                  }}
                 >
                   {link.label}
                 </Link>
