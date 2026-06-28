@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Latest Notices and Announcements - ABC Higher Secondary School">
+    <meta name="keywords" content="notices, announcements, events, news, updates">
+    <title>Notices & Announcements - ABC Higher Secondary School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .notices-hero {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .notices-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .notices-hero p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .intro-section {
+            max-width: 900px;
+            margin: -50px auto 60px;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .intro-section p {
+            font-size: 17px;
+            line-height: 1.9;
+            color: var(--text-dark);
+        }
+
+        .notices-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .notice-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .notice-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .notice-title {
+            flex: 1;
+        }
+
+        .notice-title h3 {
+            font-size: 22px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .notice-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .notice-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notice-meta-item i {
+            color: var(--primary-color);
+        }
+
+        .notice-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-important {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: var(--white);
+        }
+
+        .badge-event {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: var(--white);
+        }
+
+        .badge-general {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: var(--white);
+        }
+
+        .badge-exam {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: var(--white);
+        }
+
+        .badge-holiday {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: var(--white);
+        }
+
+        .notice-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .notice-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .notice-author {
+            font-size: 14px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .notice-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .notice-download:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .notice-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .notice-header-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .notices-hero h1 {
+                font-size: 32px;
+            }
+
+            .notices-hero p {
+                font-size: 16px;
+            }
+
+            .intro-section {
+                padding: 30px 20px;
+                margin: -30px 15px 40px;
+            }
+
+            .notice-card {
+                padding: 20px;
+            }
+
+            .notice-header {
+                flex-direction: column;
+            }
+
+            .notice-header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .notice-title h3 {
+                font-size: 18px;
+            }
+
+            .notice-content {
+                font-size: 15px;
+            }
+
+            .notice-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top Bar (Hidden on Mobile) -->
+    <div class="header-top">
+        <div class="header-top-content">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+                <span><i class="fas fa-envelope"></i> info@abchighersecondary.edu</span>
+            </div>
+            <div class="social-links">
+                <a href="https://facebook.com/abchighersecondary" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com/abchighersec" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/abchighersecondary" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="images/school logo.png" alt="ABC Higher Secondary School Logo" class="logo-img">
+                <div class="school-name">
+                    <h1>ABC Higher Secondary School</h1>
+                    <p>Excellence in Education Since 1990</p>
+                </div>
+            </div>
+            <nav id="mainNav">
+                <a href="index-new.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="principal.html">Principal</a>
+                <a href="faculty.html">Faculty</a>
+                <a href="facilities.html">Facilities</a>
+                <a href="results.html">Results</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="notices.html" class="active">Notices</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Notices Hero Section -->
+    <section class="notices-hero">
+        <h1>Notices & Announcements</h1>
+        <p>Stay Updated with Latest School News and Events</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction -->
+        <section class="intro-section">
+            <p>Stay informed about all the latest happenings at ABC Higher Secondary School. From important announcements and upcoming events to examination schedules and holiday notices, find all the information you need right here.</p>
+        </section>
+
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2>Latest Notices</h2>
+            <p>All announcements and updates in one place</p>
+        </div>
+
+        <!-- Notices Container -->
+        <div class="notices-container">
+            <!-- Notice 1 - Important -->
+            <div class="notice-card">
+                <div class="notice-header">
+                    <div class="notice-header-content">
+                        <div class="notice-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="notice-title">
+                            <h3>Admission Open for Academic Year 2026-2027</h3>
+                            <div class="notice-meta">
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>June 15, 2026</span>
+                                </div>
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Valid until: July 31, 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="notice-badge badge-important">Important</span>
+                </div>
+                <div class="notice-content">
+                    <p>ABC Higher Secondary School is pleased to announce that admissions are now open for the academic year 2026-2027. We are accepting applications for Classes 1 through 12 across all streams (Science, Commerce, and Arts). Interested parents and students are requested to visit the school office during working hours (8:00 AM - 4:00 PM) to collect the admission form or download it from our website. Limited seats available - early application is advised.</p>
+                </div>
+                <div class="notice-footer">
+                    <span class="notice-author">Posted by: Administration Office</span>
+                    <a href="#" class="notice-download">
+                        <i class="fas fa-download"></i>
+                        Download Form
+                    </a>
+                </div>
+            </div>
+
+            <!-- Notice 2 - Event -->
+            <div class="notice-card">
+                <div class="notice-header">
+                    <div class="notice-header-content">
+                        <div class="notice-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="notice-title">
+                            <h3>Annual Sports Day - July 20, 2026</h3>
+                            <div class="notice-meta">
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>June 10, 2026</span>
+                                </div>
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>School Sports Complex</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="notice-badge badge-event">Event</span>
+                </div>
+                <div class="notice-content">
+                    <p>We are excited to announce our Annual Sports Day scheduled for July 20, 2026, at the School Sports Complex. The event will feature various athletic competitions including track and field events, team sports, and indoor games. All students from Classes 1-12 are encouraged to participate. Registration for events will begin from June 25, 2026. Parents and guardians are cordially invited to attend and support our young athletes. The event will commence at 9:00 AM sharp.</p>
+                </div>
+                <div class="notice-footer">
+                    <span class="notice-author">Posted by: Sports Department</span>
+                    <a href="#" class="notice-download">
+                        <i class="fas fa-file-pdf"></i>
+                        Event Schedule
+                    </a>
+                </div>
+            </div>
+
+            <!-- Notice 3 - Exam -->
+            <div class="notice-card">
+                <div class="notice-header">
+                    <div class="notice-header-content">
+                        <div class="notice-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="notice-title">
+                            <h3>First Term Examination Schedule Released</h3>
+                            <div class="notice-meta">
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>June 5, 2026</span>
+                                </div>
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Exam Period: July 1-15, 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="notice-badge badge-exam">Examination</span>
+                </div>
+                <div class="notice-content">
+                    <p>The First Term Examination schedule for all classes has been officially released. Examinations will be conducted from July 1 to July 15, 2026. Students are advised to download the detailed time table from the school website or collect it from their respective class teachers. All students must bring their ID cards and necessary stationery items. The examination will begin at 9:00 AM daily. Students should report to their examination halls by 8:45 AM.</p>
+                </div>
+                <div class="notice-footer">
+                    <span class="notice-author">Posted by: Examination Cell</span>
+                    <a href="#" class="notice-download">
+                        <i class="fas fa-download"></i>
+                        Download Time Table
+                    </a>
+                </div>
+            </div>
+
+            <!-- Notice 4 - General -->
+            <div class="notice-card">
+                <div class="notice-header">
+                    <div class="notice-header-content">
+                        <div class="notice-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="notice-title">
+                            <h3>Parent-Teacher Meeting on June 30, 2026</h3>
+                            <div class="notice-meta">
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>June 1, 2026</span>
+                                </div>
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Time: 10:00 AM - 2:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="notice-badge badge-general">General</span>
+                </div>
+                <div class="notice-content">
+                    <p>A Parent-Teacher Meeting has been scheduled for June 30, 2026, from 10:00 AM to 2:00 PM. This meeting provides an excellent opportunity for parents to discuss their child's academic progress, behavior, and overall development with the respective class teachers and subject teachers. Parents are requested to collect the meeting schedule from the class teachers. Your presence is highly appreciated as your child's education is a collaborative effort between school and home.</p>
+                </div>
+                <div class="notice-footer">
+                    <span class="notice-author">Posted by: Principal's Office</span>
+                </div>
+            </div>
+
+            <!-- Notice 5 - Holiday -->
+            <div class="notice-card">
+                <div class="notice-header">
+                    <div class="notice-header-content">
+                        <div class="notice-icon">
+                            <i class="fas fa-umbrella-beach"></i>
+                        </div>
+                        <div class="notice-title">
+                            <h3>Summer Break Holiday Notice</h3>
+                            <div class="notice-meta">
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>May 25, 2026</span>
+                                </div>
+                                <div class="notice-meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Break: August 1-15, 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="notice-badge badge-holiday">Holiday</span>
+                </div>
+                <div class="notice-content">
+                    <p>The school will remain closed for Summer Break from August 1 to August 15, 2026. Regular classes will resume on August 16, 2026. Students are encouraged to use this time for rest, recreation, and to complete any pending assignments or project work. The school office will also remain closed during this period. In case of any emergency, please contact the administration at the emergency helpline number provided in the school handbook. We wish all students and staff a safe and enjoyable break.</p>
+                </div>
+                <div class="notice-footer">
+                    <span class="notice-author">Posted by: Administration Office</span>
+                    <a href="#" class="notice-download">
+                        <i class="fas fa-calendar-alt"></i>
+                        Annual Calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>ABC Higher Secondary School</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Education Street, Knowledge City, State 12345</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@abchighersecondary.edu</p>
+                    <p><i class="fas fa-clock"></i> Mon - Fri: 8:00 AM - 4:00 PM</p>
+                    <p><i class="fas fa-calendar"></i> Established: 1990</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index-new.html">Home</a>
+                    <a href="about.html">About Us</a>
+                    <a href="principal.html">Principal</a>
+                    <a href="faculty.html">Faculty</a>
+                    <a href="facilities.html">Facilities</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Important</h3>
+                    <a href="contact.html">Admissions</a>
+                    <a href="notices.html">Notices</a>
+                    <a href="results.html">Results</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <a href="https://facebook.com/abchighersecondary" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="https://twitter.com/abchighersec" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="https://instagram.com/abchighersecondary" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="mailto:info@abchighersecondary.edu"><i class="fas fa-envelope"></i> Email Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ABC Higher Secondary School. All Rights Reserved.</p>
+                <p style="margin-top: 8px;">Designed with ❤️ for Excellence in Education</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/15551234567?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20ABC%20Higher%20Secondary%20School"
+       class="whatsapp-float"
+       target="_blank"
+       title="Chat with us on WhatsApp"
+       aria-label="WhatsApp Chat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Scroll to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

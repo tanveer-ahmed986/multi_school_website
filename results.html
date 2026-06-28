@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Academic Results and Achievements - ABC Higher Secondary School">
+    <meta name="keywords" content="results, academic performance, toppers, achievements">
+    <title>Academic Results - ABC Higher Secondary School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .results-hero {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .results-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .results-hero p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .intro-section {
+            max-width: 900px;
+            margin: -50px auto 60px;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .intro-section p {
+            font-size: 17px;
+            line-height: 1.9;
+            color: var(--text-dark);
+        }
+
+        .stats-highlight {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            padding: 30px;
+            border-radius: 12px;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 48px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .label {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .toppers-section {
+            margin-top: 60px;
+        }
+
+        .toppers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .topper-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .topper-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            z-index: 10;
+            box-shadow: var(--shadow-md);
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+        }
+
+        .topper-header {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .topper-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--white);
+            font-size: 48px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .topper-name {
+            font-size: 26px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .topper-class {
+            font-size: 16px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .topper-content {
+            padding: 30px;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border-radius: 12px;
+        }
+
+        .score-marks {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .score-percentage {
+            font-size: 28px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .achievement-list {
+            margin-top: 20px;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .achievement-item i {
+            color: var(--accent-color);
+            font-size: 18px;
+        }
+
+        .achievements-section {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            padding: 60px 40px;
+            margin: 60px 0;
+            border-radius: 15px;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .achievement-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .achievement-card i {
+            font-size: 42px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .achievement-card h4 {
+            font-size: 18px;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .achievement-card p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .results-hero h1 {
+                font-size: 32px;
+            }
+
+            .results-hero p {
+                font-size: 16px;
+            }
+
+            .intro-section {
+                padding: 30px 20px;
+                margin: -30px 15px 40px;
+            }
+
+            .stats-highlight {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .stat-card .number {
+                font-size: 36px;
+            }
+
+            .toppers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-section {
+                padding: 40px 20px;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top Bar (Hidden on Mobile) -->
+    <div class="header-top">
+        <div class="header-top-content">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+                <span><i class="fas fa-envelope"></i> info@abchighersecondary.edu</span>
+            </div>
+            <div class="social-links">
+                <a href="https://facebook.com/abchighersecondary" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com/abchighersec" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/abchighersecondary" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="images/school logo.png" alt="ABC Higher Secondary School Logo" class="logo-img">
+                <div class="school-name">
+                    <h1>ABC Higher Secondary School</h1>
+                    <p>Excellence in Education Since 1990</p>
+                </div>
+            </div>
+            <nav id="mainNav">
+                <a href="index-new.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="principal.html">Principal</a>
+                <a href="faculty.html">Faculty</a>
+                <a href="facilities.html">Facilities</a>
+                <a href="results.html" class="active">Results</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="notices.html">Notices</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Results Hero Section -->
+    <section class="results-hero">
+        <h1>Academic Excellence</h1>
+        <p>Celebrating Outstanding Achievement and Success</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction -->
+        <section class="intro-section">
+            <p>At ABC Higher Secondary School, academic excellence is not just a goal—it's a tradition. Our students consistently achieve outstanding results, demonstrating the quality of education and dedication of our faculty. We are proud to celebrate the achievements of our top performers for the academic year 2025-2026.</p>
+
+            <div class="stats-highlight">
+                <div class="stat-card">
+                    <span class="number">98.5%</span>
+                    <span class="label">Overall Pass Rate</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">92.3%</span>
+                    <span class="label">First Division</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">850+</span>
+                    <span class="label">Students Appeared</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">45</span>
+                    <span class="label">Top Scorers 90%+</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 3 Students Section -->
+        <section class="toppers-section">
+            <div class="section-header">
+                <h2>Top Performers 2025-2026</h2>
+                <p>Celebrating our highest achievers in academic excellence</p>
+            </div>
+
+            <div class="toppers-grid">
+                <!-- 1st Rank -->
+                <div class="topper-card">
+                    <div class="rank-badge rank-1">1st</div>
+                    <div class="topper-header">
+                        <div class="topper-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="topper-name">Alice Anderson</div>
+                        <div class="topper-class">Class XII - Science Stream</div>
+                    </div>
+                    <div class="topper-content">
+                        <div class="score-display">
+                            <span class="score-marks">471/500</span>
+                            <span class="score-percentage">94.2%</span>
+                        </div>
+                        <div class="achievement-list">
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Perfect score in Mathematics</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Highest scorer in Physics</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Science Olympiad Gold Medal</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>School Captain 2025-2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2nd Rank -->
+                <div class="topper-card">
+                    <div class="rank-badge rank-2">2nd</div>
+                    <div class="topper-header">
+                        <div class="topper-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="topper-name">Bob Brown</div>
+                        <div class="topper-class">Class XII - Commerce Stream</div>
+                    </div>
+                    <div class="topper-content">
+                        <div class="score-display">
+                            <span class="score-marks">459/500</span>
+                            <span class="score-percentage">91.8%</span>
+                        </div>
+                        <div class="achievement-list">
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Highest in Accountancy</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Business Studies Excellence</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Economics Quiz Winner</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Commerce Club President</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3rd Rank -->
+                <div class="topper-card">
+                    <div class="rank-badge rank-3">3rd</div>
+                    <div class="topper-header">
+                        <div class="topper-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="topper-name">Carol Chen</div>
+                        <div class="topper-class">Class XII - Arts Stream</div>
+                    </div>
+                    <div class="topper-content">
+                        <div class="score-display">
+                            <span class="score-marks">450/500</span>
+                            <span class="score-percentage">90.0%</span>
+                        </div>
+                        <div class="achievement-list">
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Perfect score in English</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Best in Political Science</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Inter-School Debate Champion</span>
+                            </div>
+                            <div class="achievement-item">
+                                <i class="fas fa-star"></i>
+                                <span>Literary Society Head</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section class="achievements-section">
+            <div class="section-header">
+                <h2>Our Academic Achievements</h2>
+                <p>Consistent excellence across all disciplines</p>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h4>100% Pass Rate</h4>
+                    <p>Science Stream</p>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>98.5% Pass Rate</h4>
+                    <p>Overall Performance</p>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-trophy"></i>
+                    <h4>State Rank Holders</h4>
+                    <p>3 students in Top 100</p>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-star"></i>
+                    <h4>45 Students</h4>
+                    <p>Scored above 90%</p>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-certificate"></i>
+                    <h4>92% Students</h4>
+                    <p>First Division</p>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-award"></i>
+                    <h4>Best School Award</h4>
+                    <p>Regional Excellence 2026</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>ABC Higher Secondary School</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Education Street, Knowledge City, State 12345</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@abchighersecondary.edu</p>
+                    <p><i class="fas fa-clock"></i> Mon - Fri: 8:00 AM - 4:00 PM</p>
+                    <p><i class="fas fa-calendar"></i> Established: 1990</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index-new.html">Home</a>
+                    <a href="about.html">About Us</a>
+                    <a href="principal.html">Principal</a>
+                    <a href="faculty.html">Faculty</a>
+                    <a href="facilities.html">Facilities</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Important</h3>
+                    <a href="contact.html">Admissions</a>
+                    <a href="notices.html">Notices</a>
+                    <a href="results.html">Results</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <a href="https://facebook.com/abchighersecondary" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="https://twitter.com/abchighersec" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="https://instagram.com/abchighersecondary" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="mailto:info@abchighersecondary.edu"><i class="fas fa-envelope"></i> Email Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ABC Higher Secondary School. All Rights Reserved.</p>
+                <p style="margin-top: 8px;">Designed with ❤️ for Excellence in Education</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/15551234567?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20ABC%20Higher%20Secondary%20School"
+       class="whatsapp-float"
+       target="_blank"
+       title="Chat with us on WhatsApp"
+       aria-label="WhatsApp Chat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Scroll to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

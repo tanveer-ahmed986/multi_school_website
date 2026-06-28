@@ -89,3 +89,5 @@ tasks/*.output
 # Build artifacts
 *.pyc
 .tsbuildinfo
+
+.vercel

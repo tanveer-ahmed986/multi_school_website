@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About ABC Higher Secondary School - Our History, Mission, Vision and Values">
+    <meta name="keywords" content="school, education, about us, mission, vision">
+    <title>About Us - ABC Higher Secondary School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .about-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .about-hero p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .about-content {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 50px;
+            margin: -50px auto 60px;
+            max-width: 1100px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 10;
+        }
+
+        .about-content h2 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .about-content p {
+            font-size: 17px;
+            line-height: 1.9;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .vm-card {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            padding: 40px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .vm-card h3 {
+            font-size: 26px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vm-card i {
+            font-size: 32px;
+        }
+
+        .vm-card p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .value-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 2px solid var(--border-color);
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-icon {
+            font-size: 42px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .value-card h4 {
+            font-size: 20px;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .value-card p {
+            font-size: 15px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            padding: 60px 20px;
+            margin: 60px 0;
+            border-radius: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: var(--white);
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 32px;
+            }
+
+            .about-hero p {
+                font-size: 16px;
+            }
+
+            .about-content {
+                padding: 30px 20px;
+                margin: -30px 15px 40px;
+            }
+
+            .about-content h2 {
+                font-size: 24px;
+            }
+
+            .about-content p {
+                font-size: 15px;
+            }
+
+            .vision-mission-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .vm-card {
+                padding: 25px;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top Bar (Hidden on Mobile) -->
+    <div class="header-top">
+        <div class="header-top-content">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+                <span><i class="fas fa-envelope"></i> info@abchighersecondary.edu</span>
+            </div>
+            <div class="social-links">
+                <a href="https://facebook.com/abchighersecondary" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com/abchighersec" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/abchighersecondary" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="images/school logo.png" alt="ABC Higher Secondary School Logo" class="logo-img">
+                <div class="school-name">
+                    <h1>ABC Higher Secondary School</h1>
+                    <p>Excellence in Education Since 1990</p>
+                </div>
+            </div>
+            <nav id="mainNav">
+                <a href="index-new.html">Home</a>
+                <a href="about.html" class="active">About</a>
+                <a href="principal.html">Principal</a>
+                <a href="faculty.html">Faculty</a>
+                <a href="facilities.html">Facilities</a>
+                <a href="results.html">Results</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="notices.html">Notices</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <h1>About Our School</h1>
+        <p>Building Futures Through Quality Education Since 1990</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- About Content -->
+        <section class="about-content">
+            <h2>Our History</h2>
+            <p>Founded in 1990, ABC Higher Secondary School has been a beacon of educational excellence for over three decades. What began as a small institution with just 100 students has now grown into one of the most prestigious educational establishments in the region, serving over 850 students annually.</p>
+            <p>Throughout our journey, we have remained committed to our founding principles of academic excellence, character development, and holistic education. Our state-of-the-art facilities, experienced faculty, and innovative teaching methods have consistently produced outstanding results, with our students excelling not just in academics but also in sports, arts, and other extracurricular activities.</p>
+            <p>Today, ABC Higher Secondary School stands as a testament to the power of dedicated education, having shaped the futures of thousands of students who have gone on to become successful professionals, leaders, and responsible citizens contributing to society.</p>
+        </section>
+
+        <!-- Vision & Mission -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Our Vision & Mission</h2>
+                <p>Guiding principles that drive our commitment to excellence</p>
+            </div>
+            <div class="vision-mission-grid">
+                <div class="vm-card">
+                    <h3><i class="fas fa-eye"></i> Our Vision</h3>
+                    <p>To be a globally recognized institution that nurtures future leaders through excellence in education, innovation, and character development. We envision creating a learning environment where every student discovers their potential and develops the skills, values, and knowledge necessary to thrive in an ever-changing world.</p>
+                </div>
+                <div class="vm-card">
+                    <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+                    <p>To provide high-quality, comprehensive education that empowers students to achieve academic excellence, develop critical thinking skills, and become responsible global citizens. We are committed to fostering a supportive, inclusive environment that encourages creativity, innovation, and lifelong learning while instilling strong moral and ethical values.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Values -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Our Core Values</h2>
+                <p>The principles that define who we are and how we serve our students</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h4>Excellence</h4>
+                    <p>We strive for the highest standards in everything we do, from academics to character development.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h4>Integrity</h4>
+                    <p>We promote honesty, transparency, and ethical behavior in all aspects of school life.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h4>Innovation</h4>
+                    <p>We embrace new ideas and modern teaching methods to enhance the learning experience.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Community</h4>
+                    <p>We foster a supportive, inclusive environment where everyone feels valued and respected.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h4>Responsibility</h4>
+                    <p>We encourage students to take ownership of their learning and become responsible citizens.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h4>Compassion</h4>
+                    <p>We cultivate empathy and kindness towards others in our diverse community.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">850+</span>
+                    <span class="stat-label">Active Students</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">45+</span>
+                    <span class="stat-label">Expert Teachers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">34</span>
+                    <span class="stat-label">Years of Excellence</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Success Rate</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>ABC Higher Secondary School</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Education Street, Knowledge City, State 12345</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@abchighersecondary.edu</p>
+                    <p><i class="fas fa-clock"></i> Mon - Fri: 8:00 AM - 4:00 PM</p>
+                    <p><i class="fas fa-calendar"></i> Established: 1990</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="index-new.html">Home</a>
+                    <a href="about.html">About Us</a>
+                    <a href="principal.html">Principal</a>
+                    <a href="faculty.html">Faculty</a>
+                    <a href="facilities.html">Facilities</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Important</h3>
+                    <a href="contact.html">Admissions</a>
+                    <a href="notices.html">Notices</a>
+                    <a href="results.html">Results</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <a href="https://facebook.com/abchighersecondary" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="https://twitter.com/abchighersec" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="https://instagram.com/abchighersecondary" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="mailto:info@abchighersecondary.edu"><i class="fas fa-envelope"></i> Email Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ABC Higher Secondary School. All Rights Reserved.</p>
+                <p style="margin-top: 8px;">Designed with ❤️ for Excellence in Education</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/15551234567?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20ABC%20Higher%20Secondary%20School"
+       class="whatsapp-float"
+       target="_blank"
+       title="Chat with us on WhatsApp"
+       aria-label="WhatsApp Chat">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Scroll to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
