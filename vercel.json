@@ -1,16 +1,3 @@
 {
-  "version": 2,
-  "name": "abc-higher-secondary-school",
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "version": 2
 }
