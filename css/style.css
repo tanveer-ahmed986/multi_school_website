@@ -604,3 +604,104 @@ footer {
 .fade-in {
     animation: fadeIn 0.6s ease-out;
 }
+
+/* Hero Carousel/Slider */
+.hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: kenburns 20s ease-in-out infinite alternate;
+}
+
+@keyframes kenburns {
+    0% {
+        transform: scale(1) translateX(0);
+    }
+    100% {
+        transform: scale(1.1) translateX(-3%);
+    }
+}
+
+.hero-indicators {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    gap: 12px;
+}
+
+.hero-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid var(--white);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hero-indicator.active {
+    background: var(--white);
+    width: 35px;
+    border-radius: 10px;
+}
+
+.hero-indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Pause animation on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .hero-slide img {
+        animation: none;
+        transform: scale(1.05);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-indicators {
+        bottom: 15px;
+        gap: 8px;
+    }
+
+    .hero-indicator {
+        width: 10px;
+        height: 10px;
+    }
+
+    .hero-indicator.active {
+        width: 25px;
+    }
+
+    @keyframes kenburns {
+        0%, 100% {
+            transform: scale(1.1);
+        }
+    }
+}

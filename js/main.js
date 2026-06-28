@@ -88,3 +88,65 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.section, .card, .fade-element').forEach(el => {
     observer.observe(el);
 });
+
+// Hero Carousel
+let currentSlide = 0;
+let heroInterval;
+
+function initHeroCarousel() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.hero-indicator');
+    
+    if (slides.length === 0) return; // Exit if no carousel on this page
+    
+    const slideInterval = 5000; // Change slide every 5 seconds
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+
+        currentSlide = index;
+        if (currentSlide >= slides.length) currentSlide = 0;
+        if (currentSlide < 0) currentSlide = slides.length - 1;
+
+        slides[currentSlide].classList.add('active');
+        if (indicators[currentSlide]) {
+            indicators[currentSlide].classList.add('active');
+        }
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    // Auto advance slides
+    function startAutoPlay() {
+        heroInterval = setInterval(nextSlide, slideInterval);
+    }
+
+    function stopAutoPlay() {
+        clearInterval(heroInterval);
+    }
+
+    // Manual slide control via indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            stopAutoPlay();
+            showSlide(index);
+            startAutoPlay();
+        });
+    });
+
+    // Pause on hover
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        heroSection.addEventListener('mouseenter', stopAutoPlay);
+        heroSection.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    // Start autoplay
+    startAutoPlay();
+}
+
+// Initialize carousel when DOM is loaded
+document.addEventListener('DOMContentLoaded', initHeroCarousel);

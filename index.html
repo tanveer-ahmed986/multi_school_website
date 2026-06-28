@@ -190,7 +190,20 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <img src="images/School banner.png" alt="ABC Higher Secondary School Campus" class="hero-bg">
+        <div class="hero-slider">
+            <div class="hero-slide active">
+                <img src="images/School banner.png" alt="ABC Higher Secondary School Campus" loading="eager">
+            </div>
+            <div class="hero-slide">
+                <img src="images/pexels-yankrukov-8613100.jpg" alt="Students in Modern Learning Environment" loading="lazy">
+            </div>
+            <div class="hero-slide">
+                <img src="images/pexels-yankrukov-8617515.jpg" alt="Interactive Classroom Activities" loading="lazy">
+            </div>
+            <div class="hero-slide">
+                <img src="images/pexels-yankrukov-8617759.jpg" alt="Students Engaged in Learning" loading="lazy">
+            </div>
+        </div>
         <div class="hero-overlay"></div>
         <div class="hero-content fade-in">
             <h1>Welcome to ABC Higher Secondary School</h1>
@@ -217,6 +230,12 @@
                     <i class="fas fa-info-circle"></i> Learn More
                 </a>
             </div>
+        </div>
+        <div class="hero-indicators">
+            <span class="hero-indicator active" data-slide="0"></span>
+            <span class="hero-indicator" data-slide="1"></span>
+            <span class="hero-indicator" data-slide="2"></span>
+            <span class="hero-indicator" data-slide="3"></span>
         </div>
     </section>
 
